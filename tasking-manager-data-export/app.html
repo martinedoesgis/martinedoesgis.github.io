@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tasking Manager - Data Export</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.0.3/layer/tile/Bing.min.js" crossorigin=""></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin=""></script>
+		<script src="L.Map.Sync.js"></script>
+		<script src="leaflet.label.js"></script>
+		<script src="data.js"></script>
+
+		<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		html, body {
+			height: 100%;
+			width: 100%;
+		}
+		#map{
+			position:absolute;
+			height: 100%;
+			width: 80%;
+		}
+		#info{
+			position:absolute;
+			height: 100%;
+			width: 20%;
+			left:80%
+		}
+		
+		#downloadExtent:hover{
+			cursor:pointer;
+			color:white
+		}
+		</style>
+	</head>
+	<body>
+	<div id="map"></div>
+	<div id="info">
+		<div class="col-md-12">
+		<p>Export the <b>mapped</b> tasks of a specific project from the <a href="https://tasks.hotosm.org/contribute?difficulty=ALL">Tasking Manager</a> with their completion date and time.</p>
+		<p>Enter the number of a project and click on the Load button.<p>
+		<div class="input-group mb-3">
+		  <input id="projectInput" type="text" class="form-control" placeholder="0000" aria-label="0000" aria-describedby="basic-addon2">
+		  <div class="input-group-append">
+			<button class="btn btn-outline-secondary" id="loadButton" type="button">Load</button>
+		  </div>
+		</div>
+		</div>
+		<div id="projectInfo" class="col-md-12">
+		</div>
+		<div id="downloadButtons" class="col-md-12">
+			<a id="downloadExtent" class="btn btn-info">Export Project Extent</a></br></br>
+			<a id="downloadTasks" class="btn btn-info">Export Tasks</a>
+			<hr>
+			<p>Use the <a href="https://github.com/anitagraser/TimeManager">Time Manager plugin for QGIS</a> to create a cool animation of the evolution of the mapping :</p>
+			<img src="example.gif" class="img-fluid" alt="Responsive image">
+		</div>
+	</div>
+	
+		
+	
+	<script>
+		// Maps definition and syncing
+		var map = L.map('map',{
+			center: [0,  0],
+			zoom: 2,
+			preferCanvas:true
+		});
+		
+		var CartoDB_Positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+			subdomains: 'abcd',
+			maxZoom: 19
+		}).addTo(map);
+		
+		$('#downloadButtons').hide()
+		
+		var projectNb = 0;
+		var projectsDB = []
+		var tasksDB = []
+		var totalNumberOfTasks = 0;
+		var tasksLoaded = 0;
+		
+		function getProjectInfo(id){
+			console.log(id)
+			$('#projectInfo').append("<p>Project "+id+": <b class='"+id+"'></b></p></br>")
+			tasksLoaded = 0;
+			totalNumberOfTasks = 0;
+			$.getJSON('https://tasks.hotosm.org/api/v1/project/'+id+'',function(d){
+				console.log(d)
+				var f = {
+				  "type": "Feature",
+				  "properties": {"id":d.projectId,"date": d.created},
+				  "geometry": d.areaOfInterest
+				};
+				projectsDB.push(f)
+				var projectBoundaries = new L.geoJSON(f).addTo(map);
+				map.fitBounds(projectBoundaries.getBounds());
+				var tasks = d.tasks.features
+				var mappedTasks = []
+				for (var i in d.tasks.features){
+					if (d.tasks.features[i].properties.taskStatus == "VALIDATED" || d.tasks.features[i].properties.taskStatus == "MAPPED"){
+						mappedTasks.push(d.tasks.features[i])
+					}
+				}
+				totalNumberOfTasks = mappedTasks.length
+				for (var i in mappedTasks){
+					getTaskInfo(id,mappedTasks[i])
+				}
+				
+			})
+		}
+		
+		function getTaskInfo(projectId,task){
+			//console.log(task)
+			task.properties.projectId = projectId
+			$.getJSON('https://tasks.hotosm.org/api/v1/project/'+projectId+'/task/'+task.properties.taskId+'',function(d){
+				for (var i in d.taskHistory){
+					if (d.taskHistory[i].actionText == "MAPPED"){
+						task.properties.mappedDate = new Date(d.taskHistory[i].actionDate)
+					}
+				}
+				tasksDB.push(task);
+				L.geoJSON(task).addTo(map);
+				tasksLoaded++
+				$('.'+projectId+'').html(tasksLoaded+" / "+totalNumberOfTasks+" ("+Math.round(tasksLoaded*100/totalNumberOfTasks)+"%)")
+				if (tasksLoaded == totalNumberOfTasks){
+					console.log("finish")
+					$('#downloadButtons').show()
+					var dataStrProject = "data:text/json;charset=utf-8," + '{"type": "FeatureCollection","features":'+encodeURIComponent(JSON.stringify(projectsDB))+'}';
+					var dlAnchorElemProject = document.getElementById('downloadExtent');
+					dlAnchorElemProject.setAttribute("href",     dataStrProject     );
+					dlAnchorElemProject.setAttribute("download", "project.geojson");
+					
+					var dataStrTasks = "data:text/json;charset=utf-8," + '{"type": "FeatureCollection","features":'+encodeURIComponent(JSON.stringify(tasksDB))+'}';
+					var dlAnchorElemTasks = document.getElementById('downloadTasks');
+					dlAnchorElemTasks.setAttribute("href",     dataStrTasks     );
+					dlAnchorElemTasks.setAttribute("download", "tasks.geojson");
+					
+				}
+				
+			})
+		}
+		
+		$("#loadButton").on("click",function(d){
+			var project = $("#projectInput").val()
+			$('#downloadButtons').hide()
+			projectNb = 0;
+			projectsDB = []
+			tasksDB = []
+			totalNumberOfTasks = 0;
+			tasksLoaded = 0;
+			$('#projectInfo').html('');
+			getProjectInfo(project)
+			
+		})
+	
+		
+	
+		
+		
+
+	</script>
+
+
+	</div>
+	</body>
+</html>
