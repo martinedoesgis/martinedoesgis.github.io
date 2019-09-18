@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DRC - Ebola 2018-2019</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol-debug.css"/>
+		
+		
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+		<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin=""></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+		
+		
+		
+		<style>
+		body {
+		    padding: 0;
+		    margin: 0;
+		}
+
+		html,
+		body {
+		    height: 100%;
+		    width: 100%;
+		    overflow-x: hidden;
+		}
+
+		#loadingLogo {
+		    position: fixed;
+		    top: 55%;
+		    right: 50%;
+		    width: 50px;
+		    height: 50px;
+		    background-color: #D12121;
+		    animation-name: spin;
+		    animation-duration: 5000ms;
+		    animation-iteration-count: infinite;
+		    animation-timing-function: linear;
+		    /* transform: rotate(3deg); */
+		    /* transform: rotate(0.3rad);/ */
+		    /* transform: rotate(3grad); */
+		    /* transform: rotate(.03turn);  */
+		}
+
+		@keyframes spin {
+		    from {
+		        transform: rotate(0deg);
+		    }
+
+		    to {
+		        transform: rotate(360deg);
+		    }
+		}
+
+		#map:hover {
+		    cursor: pointer
+		}
+
+		#map:active {
+		    cursor: grabbing
+		}
+
+		a {
+		    color: #D12121
+		}
+
+		a:hover {
+		    color: #D12121
+		}
+
+		a:visited {
+		    color: #D12121
+		}
+
+		a:active {
+		    color: #D12121
+		}
+
+		.ol-scale-line-inner {
+		    color: black !important;
+		    border: 1px solid #000;
+		    border-top: none;
+		    border-right: none;
+		    border-left: none;
+		}
+
+		.ol-scale-line {
+		    background-color: transparent !important
+		}
+
+		.overview {
+		    text-align: center
+		}
+
+		.redNumber {
+		    color: #D12121;
+		    font-size: 1.8em
+		}
+
+		.onoffswitch {
+		    position: relative;
+		    width: 107px;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		}
+
+		.onoffswitch-checkbox {
+		    display: none;
+		}
+
+		.onoffswitch-label {
+		    display: block;
+		    overflow: hidden;
+		    cursor: pointer;
+		    border: 2px solid #F5F5F5;
+		    border-radius: 20px;
+		}
+
+		.onoffswitch-inner {
+		    display: block;
+		    width: 200%;
+		    margin-left: -100%;
+		    transition: margin 0.3s ease-in 0s;
+		}
+
+		.onoffswitch-inner:before,
+		.onoffswitch-inner:after {
+		    display: block;
+		    float: left;
+		    width: 50%;
+		    height: 17px;
+		    padding: 0;
+		    line-height: 17px;
+		    font-size: 12px;
+		    color: white;
+		    font-family: Trebuchet, Arial, sans-serif;
+		    font-weight: bold;
+		    box-sizing: border-box;
+		}
+
+		.onoffswitch-inner:before {
+		    content: "Last 21 days";
+		    padding-left: 12px;
+		    background-color: ;
+		    color: #D12121;
+		}
+
+		.onoffswitch-inner:after {
+		    content: "Cumulative";
+		    padding-right: 12px;
+		    background-color: ;
+		    color: #D12121;
+		    text-align: right;
+		}
+
+		.onoffswitch-switch {
+		    display: block;
+		    width: 12px;
+		    margin: 4px;
+		    background: #D12121;
+		    position: absolute;
+		    top: 0;
+		    bottom: 0;
+		    right: 86px;
+		    border: 2px solid #F5F5F5;
+		    border-radius: 20px;
+		    transition: all 0.3s ease-in 0s;
+		}
+
+		.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-inner {
+		    margin-left: 0;
+		}
+
+		.onoffswitch-checkbox:checked+.onoffswitch-label .onoffswitch-switch {
+		    right: 0px;
+		}
+		
+				
+	</style>
+	</head>
+	<body>
+	<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-5">
+            <h5>
+                <div id="title">Loading ...</div>
+            </h5>
+            <small>This dashboard displays the number of Ebola cases by health areas in Democratic Republic of Congo for the current outbreak. The data comes directly from the WHO and DRC MoH <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">dashboard</a> and is automatically updated every week.<br><br>
+                <ul>
+                    <li>Click on an <b>area on the map</b> to display its data.</li>
+                    <li>Switch between <b>cases in the last 21 days</b> and <b> cumulative cases </b> by clicking on the button in the legend.</li>
+                </ul>
+            </small>
+            <hr>
+            <small><strong id="overview">Overview</strong></small><br>
+            <div class="row overview">
+                <div class="col-md-6">
+                    <strong id="totalCases" class="redNumber"></strong><br>
+                    <small>Cases<br><em>(confirmed and probable)</em></small>
+                </div>
+                <div class="col-md-6">
+                    <strong id="cases21" class="redNumber"></strong><br>
+                    <small>Cases in the last 21 days</small>
+                </div>
+            </div>
+            <hr>
+            <small><strong id="graphTitle">Number of cases per week</strong></small><br><br>
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="col-md-5">
+            <div class="row" id="map" style="width: 100%; height: 100%; position:fixed">
+            </div>
+        </div>
+        <div class="col-md-2" style="background-color:white;height:100%">
+            <h5>Legend</h5>
+            <br>
+            <small><strong>Number of days since the last case</strong></small>
+            <svg width="400" height="20">
+                <rect width="30" height="15" style="fill:rgba(209, 33, 33,0.4)" />
+                <text x="35" y="13" fill="black" font-size="12">Less than 21 days</text>
+            </svg>
+            <svg width="400" height="20">
+                <rect width="30" height="15" style="fill:rgba(255, 112, 91,0.4)" />
+                <text x="35" y="13" fill="black" font-size="12">Between 22 and 42 days</text>
+            </svg>
+            <svg width="400" height="20">
+                <rect width="30" height="15" style="fill:rgba(87, 186, 187,0.4)" />
+                <text x="35" y="13" fill="black" font-size="12">More than 43 days</text>
+            </svg>
+            <hr>
+            <small><strong>Number of cases</strong></small>
+            <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+                <label class="onoffswitch-label" for="myonoffswitch">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                </label>
+            </div>
+            <svg height="100" width="150">
+                <line x1="78" y1="29" x2="98" y2="29" style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
+                <line x1="65" y1="65" x2="98" y2="65" style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
+                <line x1="60" y1="84" x2="98" y2="84" style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
+                <circle cx="50" cy="84" r="5" stroke="rgba(209, 33, 33, 1)" stroke-width="1" fill="rgba(209, 33, 33, 0.8)" />
+                <circle cx="50" cy="65" r="11" stroke="rgba(209, 33, 33, 1)" stroke-width="1" fill="rgba(209, 33, 33, 0.8)" />
+                <circle cx="50" cy="29" r="22" stroke="rgba(209, 33, 33, 1)" stroke-width="1" fill="rgba(209, 33, 33, 0.8)" />
+                <text id="maxValue" x="102" y="32" fill="black" font-size="12"></text>
+                <text id="middleValue" x="102" y="67" fill="black" font-size="12"></text>
+                <text id="minValue" x="102" y="87" fill="black" font-size="12"></text>
+            </svg>
+            <br>
+        </div>
+    </div>
+</div>
+<div id="loadingLogo"></div>
+	
+<script>
+//map
+var map = new ol.Map({
+    target: "map",
+    controls: ol.control.defaults({
+        attribution: false,
+        zoom: false,
+    }),
+    view: new ol.View({
+        center: ol.proj.fromLonLat([34.443982, 0.186274]),
+        zoom: 7,
+    })
+});
+
+var scaleLineControl = new ol.control.ScaleLine();
+map.addControl(scaleLineControl)
+
+var basemap = new ol.layer.Group({
+    title: 'Background',
+    layers: [
+        new ol.layer.Tile({
+            title: "Terrain",
+            source: new ol.source.XYZ({
+                url: 'https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png',
+                wrapX: false,
+                crossOrigin: 'anonymous'
+            }),
+            opacity: 0.5
+        })
+    ]
+});
+
+map.addLayer(basemap);
+var who_url = "https://services.arcgis.com/5T5nSi527N4F7luB/ArcGIS/rest/services/EBOLA_MASTER_KIVU/FeatureServer/0//query?where=TotCas+%3E+0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=false&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
+var who_url2 = "https://services.arcgis.com/5T5nSi527N4F7luB/ArcGIS/rest/services/AS_DRC/FeatureServer/0/query?where=CumulCas+%3E+0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token="
+var GeoJsonFormat = new ol.format.GeoJSON();
+var max21Value = 0;
+var maxCumulValue = 0;
+
+function propRadius(v, m) {
+    return Math.sqrt(v / m) * 22
+}
+var countryStyle = new ol.style.Style({
+    fill: new ol.style.Fill({
+        color: 'rgba(209, 33, 33, 0)'
+    }),
+    stroke: new ol.style.Stroke({
+        color: 'rgba(255, 255,255,0.6)',
+        width: 0.4
+    })
+});
+var casesStyle = new ol.style.Style({
+    image: new ol.style.Circle({
+        radius: 0,
+        fill: new ol.style.Fill({
+            color: 'rgba(209, 33, 33, 0)'
+        }),
+        stroke: new ol.style.Stroke({
+            color: 'rgba(255, 255, 255, 0)',
+            width: 0.1
+        })
+    }),
+    geometry: function(feature) {
+        // return the coordinates of the first ring of the polygon
+        var extent = feature.getGeometry()
+            .getExtent();
+        var coord = [extent[0] + (extent[2] - extent[0]) / 2, extent[1] + (extent[3] - extent[1]) / 2]
+        return new ol.geom.Point(coord);
+    }
+});
+var style = [countryStyle, casesStyle];
+var areas = new ol.layer.Vector({
+        title: 'Areas boundaries',
+        declutter: false,
+        source: new ol.source.Vector()
+    })
+    //map.addLayer(areas)
+var health_areas = new ol.layer.Vector({
+    title: 'Health Areas',
+    style: function(feature) {
+        //reseting style
+        casesStyle.getImage()
+            .setRadius(0)
+        casesStyle.getImage()
+            .getFill()
+            .setColor('rgba(209, 33, 33, 0)')
+        casesStyle.getImage()
+            .getStroke()
+            .setColor('rgba(209, 33, 33, 0)')
+        casesStyle.getImage()
+            .getStroke()
+            .setWidth(0)
+        countryStyle.getFill()
+            .setColor('rgba(209, 33, 33, 0)')
+        countryStyle.getStroke()
+            .setColor('rgba(209, 33, 33, 0)')
+            //prop circles for cases
+        if (feature.get('cas21jrs') > 0) {
+            casesStyle.getImage()
+                .getFill()
+                .setColor('rgba(209, 33, 33, 0.8)')
+            casesStyle.getImage()
+                .getStroke()
+                .setColor('rgba(209, 33, 33, 1)')
+            casesStyle.getImage()
+                .getStroke()
+                .setWidth(1)
+            casesStyle.getImage()
+                .setRadius(propRadius(feature.get('cas21jrs'), max21Value))
+        }
+        //colors by day since last case
+        if (feature.get('nbjrsderca') < 22) {
+            countryStyle.getFill()
+                .setColor('rgba(209, 33, 33, 0.4)')
+            countryStyle.getStroke()
+                .setColor('rgba(255, 255, 255, 1)')
+        } else if (feature.get('nbjrsderca') >= 22 && feature.get('nbjrsderca') < 43) {
+            countryStyle.getFill()
+                .setColor('rgba(255, 112, 91, 0.4)')
+            countryStyle.getStroke()
+                .setColor('rgba(255, 255, 255, 1)')
+        } else if (feature.get('nbjrsderca') >= 43) {
+            countryStyle.getFill()
+                .setColor('rgba(87, 186, 187, 0.4)')
+            countryStyle.getStroke()
+                .setColor('rgba(255, 255, 255, 1)')
+        }
+        <!-- if (feature.get('Nom')){ -->
+        <!-- labelStyle.getText().setText(feature.get('')); -->
+        <!-- } -->
+        return style;
+    },
+    declutter: false,
+    source: new ol.source.Vector()
+})
+map.addLayer(health_areas)
+var labelsOverlay = new ol.layer.Group({
+    title: 'Labels',
+    layers: [
+        new ol.layer.Tile({
+            title: "Labels",
+            source: new ol.source.XYZ({
+                url: 'https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+                //url: "https://stamen-tiles-a.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}.png",
+                wrapX: false,
+                crossOrigin: 'anonymous'
+            }),
+            opacity: 1
+        })
+    ]
+});
+map.addLayer(labelsOverlay);
+Date.prototype.getWeek = function() {
+        var date = new Date(this.getTime());
+        date.setHours(0, 0, 0, 0);
+        // Thursday in current week decides the year.
+        date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+        // January 4 is always in week 1.
+        var week1 = new Date(date.getFullYear(), 0, 4);
+        // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+        return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+    }
+    //creating empty array for cases by week
+var weekly_data = []
+for (var step = 17; step < 53; step++) {
+    weekly_data.push({
+        week: "w_2018_" + step + "",
+        cases: 0
+    })
+}
+var todayWeek = new Date()
+todayWeek = todayWeek.getWeek()
+for (var step = 1; step <= todayWeek; step++) {
+    if (step < 10) {
+        weekly_data.push({
+            week: "w_2019_0" + step + "",
+            cases: 0
+        })
+    } else {
+        weekly_data.push({
+            week: "w_2019_" + step + "",
+            cases: 0
+        })
+    }
+}
+var weeklyValues = [];
+var totalCases = 0
+var cases21 = 0
+var chart
+$.getJSON(who_url, function(d) {
+    for (var i in d.features) {
+        d.features[i].properties = ConvertKeysToLowerCase(d.features[i].properties) //lowercase all fields
+        for (var step = 17; step < 53; step++) { // cleaning fields for year 2018
+            var old_week = "cas_s" + step + ""
+            var new_week = "w_2018_" + step + ""
+            if (d.features[i].properties[old_week]) {
+                d.features[i].properties[new_week] = d.features[i].properties[old_week]
+                for (var y in weekly_data) {
+                    if (weekly_data[y].week == new_week) {
+                        weekly_data[y].cases = weekly_data[y].cases + d.features[i].properties[old_week]
+                    }
+                }
+            } else {
+                d.features[i].properties[new_week] = 0
+            }
+        }
+        var todayWeek = new Date()
+        todayWeek = todayWeek.getWeek()
+        for (var step = 1; step <= todayWeek; step++) { // cleaning fields for year 2019
+            var old_week = "cas_s" + step + "_19"
+            if (step < 10) {
+                var new_week = "w_2019_0" + step + ""
+            } else {
+                var new_week = "w_2019_" + step + ""
+            }
+            if (d.features[i].properties[old_week]) {
+                d.features[i].properties[new_week] = d.features[i].properties[old_week]
+                for (var y in weekly_data) {
+                    if (weekly_data[y].week == new_week) {
+                        weekly_data[y].cases = weekly_data[y].cases + d.features[i].properties[old_week]
+                    }
+                }
+            } else {
+                d.features[i].properties[new_week] = 0
+            }
+        }
+        totalCases = totalCases + d.features[i].properties.totcas
+        cases21 = cases21 + d.features[i].properties.nb_cas_conf_last_21jrs
+        areas.getSource()
+            .addFeature(GeoJsonFormat.readFeature(d.features[i], {
+                dataProjection: 'EPSG:4326',
+                featureProjection: 'EPSG:3857'
+            }))
+    }
+    $("#totalCases")
+        .html(totalCases)
+    $("#cases21")
+        .html(cases21)
+    var labels = [];
+    for (var i in weekly_data) {
+        labels.push(weekly_data[i].week)
+        weeklyValues.push(weekly_data[i].cases)
+    }
+    var ctx = document.getElementById('myChart')
+        .getContext('2d');
+    chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'bar',
+        // The data for our dataset
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Number of confirmed cases by week',
+                backgroundColor: 'rgba(209, 33, 33,1)',
+                borderColor: 'rgba(209, 33, 33, 1)',
+                pointRadius: 0,
+                fill: true,
+                data: weeklyValues
+            }]
+        },
+        // Configuration options go here
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        fontSize: 14,
+                        maxTicksLimit: 200,
+                        autoSkip: false,
+                        callback: function(tick) {
+                            if (tick == "w_2018_17") {
+                                return "April 2018"
+                            } else if (tick == "w_2018_26") {
+                                return "July"
+                            } else if (tick == "w_2018_36") {
+                                return "September"
+                            } else if (tick == "w_2018_44") {
+                                return "November"
+                            } else if (tick == "w_2019_01") {
+                                return "January 2019"
+                            } else if (tick == "w_2019_10") {
+                                return "March"
+                            } else if (tick == "w_2019_18") {
+                                return "May"
+                            } else if (tick == "w_2019_27") {
+                                return "July"
+                            } else if (tick == "w_2019_35") {
+                                return "September"
+                            } else if (tick == "w_2019_44") {
+                                return "November"
+                            } else {
+                                return ""
+                            }
+                        }
+                    },
+                }]
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return tooltipItem.value + " cases"
+                    },
+                    title: function(tooltipItem, data) {
+                        var split = data.labels[tooltipItem[0].index].split('_')
+                        return "" + split[1] + " - Week " + split[2] + ""
+                    }
+                }
+            },
+        }
+    });
+})
+
+function ConvertKeysToLowerCase(obj) {
+    var output = {};
+    for (i in obj) {
+        if (Object.prototype.toString.apply(obj[i]) === '[object Object]') {
+            output[i.toLowerCase()] = ConvertKeysToLowerCase(obj[i]);
+        } else if (Object.prototype.toString.apply(obj[i]) === '[object Array]') {
+            output[i.toLowerCase()] = [];
+            output[i.toLowerCase()].push(ConvertKeysToLowerCase(obj[i][0]));
+        } else {
+            output[i.toLowerCase()] = obj[i];
+        }
+    }
+    return output;
+};
+// select interaction working on "singleclick"
+var selectSingleClick = new ol.interaction.Select({
+    style: function(feature, resolution) {
+        return new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(209, 33, 33, 0.8)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: 'rgba(209, 33, 33, 1)',
+                width: 3
+            })
+        });
+    }
+});
+map.addInteraction(selectSingleClick);
+selectSingleClick.on('select', function(e) {
+    if (e.selected[0]) {
+        var values = e.selected[0].values_
+        
+        $("#totalCases")
+            .html(values.cumulcas)
+        $("#cases21")
+            .html(values.cas21jrs)
+        $("#overview")
+            .html("Overview - " + values.as_ + " Health Area")
+        overview
+        chart.update();
+    } else {
+        chart.data.datasets[0].data = weeklyValues
+        $("#totalCases")
+            .html(totalCases)
+        $("#cases21")
+            .html(cases21)
+        $("#overview")
+            .html("Overview")
+        chart.update();
+    }
+})
+$.getJSON(who_url2, function(d) {
+    
+    for (var i in d.features) {
+        d.features[i].properties = ConvertKeysToLowerCase(d.features[i].properties) //lowercase all fields
+        if (d.features[i].properties.cas21jrs > max21Value) {
+            max21Value = d.features[i].properties.cas21jrs
+        }
+        if (d.features[i].properties.cumulcas > maxCumulValue) {
+            maxCumulValue = d.features[i].properties.cumulcas
+        }
+        health_areas.getSource()
+            .addFeature(GeoJsonFormat.readFeature(d.features[i], {
+                dataProjection: 'EPSG:3857',
+                featureProjection: 'EPSG:3857'
+            }))
+        $("#loadingLogo")
+            .hide()
+        $("#title")
+            .html("Democratic Republic of Congo - Ebola 2018-2019")
+    }
+    $("#maxValue")
+        .html(max21Value)
+    $("#middleValue")
+        .html(Math.round(max21Value / 4))
+    $("#minValue")
+        .html(Math.round(max21Value / 16))
+})
+$('#myonoffswitch')
+    .change(function() {
+        if ($(this)
+            .is(":checked")) {
+     
+            $("#maxValue")
+                .html(max21Value)
+            $("#middleValue")
+                .html(Math.round(max21Value / 4))
+            $("#minValue")
+                .html(Math.round(max21Value / 16))
+            health_areas.setStyle(function(feature) {
+                //reseting style
+                casesStyle.getImage()
+                    .setRadius(0)
+                casesStyle.getImage()
+                    .getFill()
+                    .setColor('rgba(209, 33, 33, 0)')
+                casesStyle.getImage()
+                    .getStroke()
+                    .setColor('rgba(209, 33, 33, 0)')
+                casesStyle.getImage()
+                    .getStroke()
+                    .setWidth(0)
+                countryStyle.getFill()
+                    .setColor('rgba(209, 33, 33, 0)')
+                countryStyle.getStroke()
+                    .setColor('rgba(209, 33, 33, 0)')
+                    //prop circles for cases
+                if (feature.get('cas21jrs') > 0) {
+                    casesStyle.getImage()
+                        .getFill()
+                        .setColor('rgba(209, 33, 33, 0.8)')
+                    casesStyle.getImage()
+                        .getStroke()
+                        .setColor('rgba(209, 33, 33, 1)')
+                    casesStyle.getImage()
+                        .getStroke()
+                        .setWidth(1)
+                    casesStyle.getImage()
+                        .setRadius(propRadius(feature.get('cas21jrs'), max21Value))
+                }
+                //colors by day since last case
+                if (feature.get('nbjrsderca') < 22) {
+                    countryStyle.getFill()
+                        .setColor('rgba(209, 33, 33, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                } else if (feature.get('nbjrsderca') >= 22 && feature.get('nbjrsderca') < 43) {
+                    countryStyle.getFill()
+                        .setColor('rgba(255, 112, 91, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                } else if (feature.get('nbjrsderca') >= 43) {
+                    countryStyle.getFill()
+                        .setColor('rgba(87, 186, 187, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                }
+                
+                return style;
+            })
+        } else {
+            
+            $("#maxValue")
+                .html(maxCumulValue)
+            $("#middleValue")
+                .html(Math.round(maxCumulValue / 4))
+            $("#minValue")
+                .html(Math.round(maxCumulValue / 16))
+            health_areas.setStyle(function(feature) {
+                //reseting style
+                casesStyle.getImage()
+                    .setRadius(0)
+                casesStyle.getImage()
+                    .getFill()
+                    .setColor('rgba(209, 33, 33, 0)')
+                casesStyle.getImage()
+                    .getStroke()
+                    .setColor('rgba(209, 33, 33, 0)')
+                casesStyle.getImage()
+                    .getStroke()
+                    .setWidth(0)
+                countryStyle.getFill()
+                    .setColor('rgba(209, 33, 33, 0)')
+                countryStyle.getStroke()
+                    .setColor('rgba(209, 33, 33, 0)')
+                    //prop circles for cases
+                if (feature.get('cumulcas') > 0) {
+                    casesStyle.getImage()
+                        .getFill()
+                        .setColor('rgba(209, 33, 33, 0.8)')
+                    casesStyle.getImage()
+                        .getStroke()
+                        .setColor('rgba(209, 33, 33, 1)')
+                    casesStyle.getImage()
+                        .getStroke()
+                        .setWidth(1)
+                    casesStyle.getImage()
+                        .setRadius(propRadius(feature.get('cumulcas'), maxCumulValue))
+                }
+                //colors by day since last case
+                if (feature.get('nbjrsderca') < 22) {
+                    countryStyle.getFill()
+                        .setColor('rgba(209, 33, 33, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                } else if (feature.get('nbjrsderca') >= 22 && feature.get('nbjrsderca') < 43) {
+                    countryStyle.getFill()
+                        .setColor('rgba(255, 112, 91, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                } else if (feature.get('nbjrsderca') >= 43) {
+                    countryStyle.getFill()
+                        .setColor('rgba(87, 186, 187, 0.4)')
+                    countryStyle.getStroke()
+                        .setColor('rgba(255, 255, 255, 1)')
+                }
+                return style;
+            })
+        }
+    });	
+		
+		
+	</script>
+	</body>
+</html>
