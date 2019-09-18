@@ -301,29 +301,7 @@ var weeklyValues = [];
 var totalCases = 0;
 var cases21 = 0;
 var chart;
-//creating empty array for cases by week in the graph
-var weekly_data = []
-for (var step = 17; step < 53; step++) {
-    weekly_data.push({
-        week: "w_2018_" + step + "",
-        cases: 0
-    })
-}
-var todayWeek = new Date()
-todayWeek = todayWeek.getWeek()
-for (var step = 1; step <= todayWeek; step++) {
-    if (step < 10) {
-        weekly_data.push({
-            week: "w_2019_0" + step + "",
-            cases: 0
-        })
-    } else {
-        weekly_data.push({
-            week: "w_2019_" + step + "",
-            cases: 0
-        })
-    }
-}
+
 
 
 //global functions
@@ -471,6 +449,30 @@ var labelsOverlay = new ol.layer.Group({
 });
 map.addLayer(labelsOverlay);
 
+
+//creating empty array for cases by week in the graph
+var weekly_data = []
+for (var step = 17; step < 53; step++) {
+    weekly_data.push({
+        week: "w_2018_" + step + "",
+        cases: 0
+    })
+}
+var todayWeek = new Date()
+todayWeek = todayWeek.getWeek()
+for (var step = 1; step <= todayWeek; step++) {
+    if (step < 10) {
+        weekly_data.push({
+            week: "w_2019_0" + step + "",
+            cases: 0
+        })
+    } else {
+        weekly_data.push({
+            week: "w_2019_" + step + "",
+            cases: 0
+        })
+    }
+}
 
 //creating graph
 $.getJSON(who_url, function(d) {
