@@ -120,7 +120,7 @@
             </h5>
            <small>This dashboard displays the number of Ebola cases by health division in DRC for the current outbreak. The data comes directly from the WHO and DRC MoH <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">dashboard</a> and is automatically updated every week.<br><br>
                 <ul>
-                    <li>Switch between health <b>areas </b> and <b> zones </b> and between <b>last 21 day</b> and <b>cumulative </b>cases in the legend.</li>
+                    <li>Switch between health <b>areas </b> and <b> zones </b> and between <b>last 21 days</b> and <b>cumulative </b>cases in the legend.</li>
 					<li><b>Click</b> on a division on the map to display its information. If a health <b>zone</b> is selected, the graph will show the weekly data for it.
                 </ul>
             </small>
@@ -716,9 +716,9 @@ var labelsLayer = new ol.layer.Group({
 // adding layers in correct order
 map.addLayer(colorLayer);
 map.addLayer(overlayHZLayer);
-map.addLayer(labelsLayer);
 map.addLayer(propLayer);
 map.addLayer(selectLayer);
+map.addLayer(labelsLayer);
 
 
 
