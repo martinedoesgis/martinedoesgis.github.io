@@ -118,7 +118,7 @@
             <h5>
                 <div id="title">Democratic Republic of Congo - Ebola Outbreak 2018-2019</div>
             </h5>
-           <small>This dashboard displays the number of Ebola cases by health division in DRC for the current outbreak. The data comes directly from the WHO and DRC MoH <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">dashboard</a> and is automatically updated every week.<br><br>
+           <small>This dashboard displays the number of Ebola cases by health division in DRC for the current outbreak. The data comes directly from the WHO and DRC MoH <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">dashboard</a> and is automatically updated here.<br><em> Last update : <b id="lastUpdate"></b></em><br><br>
                 <ul>
                     <li>Switch between health <b>areas </b> and <b> zones </b> and between <b>last 21 days</b> and <b>cumulative </b>cases in the legend.</li>
 					<li><b>Click</b> on a division on the map to display its information. If a health <b>zone</b> is selected, the graph will show the weekly data for it.
@@ -269,6 +269,9 @@ var weeklyValues = [];
 var cumulativeValues = []
 var totalCases = 0;
 var cases21 = 0;
+
+var lastUpdate = 0;
+
 var chart;
 
 // big cleaned GeoJSON of health zones (the geometry used in WHO dashboard doesn't fit with the health areas)
@@ -345,6 +348,21 @@ function ConvertKeysToLowerCase(obj) {
     }
     return output;
 };
+
+function formatDate(date) {
+  var monthNames = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
 
 //creating empty array for cases by week in the graph
 var weekly_data = []
@@ -526,6 +544,9 @@ $.getJSON(who_url, function(d) {
         if (d.features[i].properties.totcas > maxCumulValueZone) {
             maxCumulValueZone = d.features[i].properties.totcas
         }
+		if (d.features[i].properties.situdate > lastUpdate){
+			lastUpdate = d.features[i].properties.situdate 
+		}
 		
         for (var step = 17; step < 53; step++) { // cleaning the cases fields for year 2018
             var old_week = "cas_s" + step + ""
@@ -569,6 +590,8 @@ $.getJSON(who_url, function(d) {
         totalCases = totalCases + d.features[i].properties.totcas
         cases21 = cases21 + d.features[i].properties.nb_cas_conf_last_21jrs
 		
+		
+		
 		//creating field that stores all the cases per week 
 		d.features[i].properties.weekDataForGraph = featureWeeklyValues
 		
@@ -584,6 +607,9 @@ $.getJSON(who_url, function(d) {
 	//writting values in HTML
     $("#totalCases").html(totalCases)
     $("#cases21").html(cases21)
+	//lastUpdate
+	console.log(lastUpdate)
+	$("#lastUpdate").html(formatDate(new Date(lastUpdate)))
 	
 	//chart creation
     var labels = [];
@@ -628,7 +654,7 @@ $.getJSON(who_url, function(d) {
                         display: false
                     },
                     ticks: {
-                        fontSize: 14,
+                        fontSize: 12,
                         maxTicksLimit: 200,
                         autoSkip: false,
                         callback: function(tick) {
@@ -771,15 +797,19 @@ selectSingleClick.on('select', function(e) {
 		if (values._level_){
         $("#overview")
             .html("Overview - " + values.as_ + " Health Area")
+			$("#graphTitle").html("Number of cases per week")	
+			chart.data.datasets[0].data = weeklyValues
 		}
 		else{
 		$("#overview")
             .html("Overview - " + values.properties.nom + " Health Zone")
 		chart.data.datasets[0].data = values.properties.weekDataForGraph
+		$("#graphTitle").html("Number of cases per week - " + values.properties.nom + " Health Zone")
 		}
         chart.update();
     } else {
         chart.data.datasets[0].data = weeklyValues
+		$("#graphTitle").html("Number of cases per week")
         $("#totalCases")
             .html(totalCases)
         $("#cases21")
