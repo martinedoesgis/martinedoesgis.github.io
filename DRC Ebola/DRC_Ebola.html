@@ -151,7 +151,7 @@
 			<label class="switch-light" onclick="">
   <input type="checkbox" autocomplete="off" id="checkScale">
   <strong>
-    Scale
+    Health division
   </strong>
 
   <span class="alert alert-light">
@@ -191,16 +191,20 @@
 			<hr>
             <small><strong>Number of days since the last case</strong></small>
             <svg width="400" height="20">
+                <rect width="30" height="15" style="fill:rgba(169, 0, 0,0.5)" />
+                <text x="35" y="13" fill="black" font-size="12">Less than a week ago</text>
+            </svg>
+			<svg width="400" height="20">
                 <rect width="30" height="15" style="fill:rgba(209, 33, 33,0.4)" />
-                <text x="35" y="13" fill="black" font-size="12">Less than 21 days</text>
+                <text x="35" y="13" fill="black" font-size="12">Between 7 and 21 days ago</text>
             </svg>
             <svg width="400" height="20">
                 <rect width="30" height="15" style="fill:rgba(255, 112, 91,0.4)" />
-                <text x="35" y="13" fill="black" font-size="12">Between 22 and 42 days</text>
+                <text x="35" y="13" fill="black" font-size="12">Between 22 and 42 days ago</text>
             </svg>
-            <svg width="400" height="33">
+            <svg width="400" height="20">
                 <rect width="30" height="15" style="fill:rgba(87, 186, 187,0.4)" />
-                <text x="35" y="13" fill="black" font-size="12">More than 43 days</text>
+                <text x="35" y="13" fill="black" font-size="12">More than 43 days ago</text>
             </svg>
 			<br>
         </div>
@@ -262,6 +266,7 @@ var maxCumulValueZone = 0;
 
 
 var weeklyValues = [];
+var cumulativeValues = []
 var totalCases = 0;
 var cases21 = 0;
 var chart;
@@ -406,12 +411,17 @@ var colorLayer = new ol.layer.Vector({
     declutter: false,
     source: new ol.source.Vector(),
 	style: function(feature) {
-		var rgba = 'rgba(0, 0, 0, 0)'
-		if (feature.get('nbjrsderca') < 22) {
+		var rgba = 'rgba(0, 0, 0, 0)';
+		if (feature.get('nbjrsderca') < 7) {
+            rgba = 'rgba(169, 0, 0, 0.5)'
+        }
+		else if (feature.get('nbjrsderca') >= 7 && feature.get('nbjrsderca') < 22) {
             rgba = 'rgba(209, 33, 33, 0.4)'
-        } else if (feature.get('nbjrsderca') >= 22 && feature.get('nbjrsderca') < 43) {
+        } 
+		else if (feature.get('nbjrsderca') >= 22 && feature.get('nbjrsderca') < 43) {
             rgba = 'rgba(255, 112, 91, 0.4)'
-        } else if (feature.get('nbjrsderca') >= 43) {
+        } 
+		else if (feature.get('nbjrsderca') >= 43) {
             rgba = 'rgba(87, 186, 187, 0.4)'
         }
 		return new ol.style.Style({
@@ -580,6 +590,12 @@ $.getJSON(who_url, function(d) {
     for (var i in weekly_data) {
         labels.push(weekly_data[i].week)
         weeklyValues.push(weekly_data[i].cases)
+		if (i == 0){
+		cumulativeValues.push(weekly_data[i].cases)
+		}
+		else{
+		cumulativeValues.push(cumulativeValues[i-1]+weekly_data[i].cases)
+		}
     }
     var ctx = document.getElementById('myChart')
         .getContext('2d');
@@ -589,14 +605,17 @@ $.getJSON(who_url, function(d) {
         // The data for our dataset
         data: {
             labels: labels,
-            datasets: [{
+            datasets: [
+			{
                 label: 'Number of confirmed cases by week',
                 backgroundColor: 'rgba(209, 33, 33,1)',
                 borderColor: 'rgba(209, 33, 33, 1)',
                 pointRadius: 0,
                 fill: true,
+				type: 'bar',
                 data: weeklyValues
-            }]
+            }
+			]
         },
         // Configuration options go here
         options: {
