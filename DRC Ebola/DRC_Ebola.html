@@ -7,7 +7,6 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/4.6.5/ol-debug.css"/>
 		<link rel="stylesheet" href="https://ghinda.net/css-toggle-switch/dist/toggle-switch.css"/>
-		<link rel="stylesheet" href="https://refreshless.com/nouislider/distribute/nouislider.css?v=1402"/>
 		
 		
 		
@@ -16,7 +15,6 @@
 		<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin=""></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-		<script src="https://refreshless.com/nouislider/distribute/nouislider.js?v=1402"></script>
 		<script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script>
 		
 		
@@ -108,7 +106,7 @@
 
 		.alert:hover{
 			cursor:pointer
-		}			
+		}		
 	</style>
 	</head>
 	<body>
@@ -118,9 +116,10 @@
             <h5>
                 <div id="title">Democratic Republic of Congo - Ebola Outbreak 2018-2019</div>
             </h5>
-           <small>This dashboard displays the number of Ebola cases by health division in DRC for the current outbreak. The data comes directly from the WHO and DRC MoH <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">dashboard</a> and is automatically updated here.<br><em> Last update : <b id="lastUpdate"></b></em><br><br>
+           <small>
+				<em> Last update : <b id="lastUpdateZones"></b> for total cases and cases by zones, <b id="lastUpdateAreas"></b> for cases by areas. </em><br><em> Source : <a target="_blank" href="https://www.arcgis.com/apps/opsdashboard/index.html#/e70c3804f6044652bc37cce7d8fcef6c">WHO / DRC MoH</a></em><br><br>
                 <ul>
-                    <li>Switch between health <b>areas </b> and <b> zones </b> and between <b>last 21 days</b> and <b>cumulative </b>cases in the legend.</li>
+                    <li>Switch between health <b>areas </b> and <b> zones </b> and between <b>last 21 days</b> and <b>cumulative </b>cases in the parameters.</li>
 					<li><b>Click</b> on a division on the map to display its information. If a health <b>zone</b> is selected, the graph will show the weekly data for it.
                 </ul>
             </small>
@@ -139,14 +138,13 @@
             <hr>
             <small><strong id="graphTitle">Number of cases per week</strong></small><br><br>
             <canvas id="myChart"></canvas>
-			<div id="slider"></div>
         </div>
         <div class="col-md-5">
             <div class="row" id="map" style="width: 100%; height: 100%; position:fixed">
             </div>
         </div>
         <div class="col-md-2" style="background-color:white;height:100%">
-            <h5>Legend</h5>
+            <h5>Parameters</h5>
 		
 			<label class="switch-light" onclick="">
   <input type="checkbox" autocomplete="off" id="checkScale">
@@ -155,9 +153,9 @@
   </strong>
 
   <span class="alert alert-light">
-    <span>Areas</span>
     <span>Zones</span>
-    <a class="btn btn-danger"></a>
+    <span>Areas</span>
+    <a class="btn btn-sm btn-danger"></a>
   </span>
 </label>
 
@@ -170,12 +168,11 @@
   <span class="alert alert-light">
     <span>Last 21 days</span>
     <span>Cumulative</span>
-    <a class="btn btn-danger"></a>
+    <a class="btn btn-sm btn-danger"></a>
   </span>
 </label>
-
-			
-            <br>
+			<hr>
+			<h5>Legend</h5>
 			<small><strong>Number of cases</strong></small>
             <svg height="100" width="150">
                 <line x1="78" y1="29" x2="98" y2="29" style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
@@ -188,7 +185,7 @@
                 <text id="middleValue" x="102" y="67" fill="black" font-size="12"></text>
                 <text id="minValue" x="102" y="87" fill="black" font-size="12"></text>
             </svg>
-			<hr>
+			<br>
             <small><strong>Number of days since the last case</strong></small>
             <svg width="400" height="20">
                 <rect width="30" height="15" style="fill:rgba(169, 0, 0,0.5)" />
@@ -270,7 +267,8 @@ var cumulativeValues = []
 var totalCases = 0;
 var cases21 = 0;
 
-var lastUpdate = 0;
+var lastUpdateZones = 0;
+var lastUpdateAreas = 0;
 
 var chart;
 
@@ -414,11 +412,11 @@ var propLayer = new ol.layer.Vector({
 				})
 			}),
 			geometry: function(feature) {
-				// return the coordinates of the first ring of the polygon
 				var extent = feature.getGeometry()
 					.getExtent();
 				var coord = [extent[0] + (extent[2] - extent[0]) / 2, extent[1] + (extent[3] - extent[1]) / 2];
 				return new ol.geom.Point(coord);
+				
 			}
 		})
 	}
@@ -536,6 +534,7 @@ $.getJSON(who_url, function(d) {
     for (var i in d.features) {
 		//lowercase all fieldnames
         d.features[i].properties = ConvertKeysToLowerCase(d.features[i].properties);
+		d.features[i].properties.geom = d.features[i].geometry
 		var featureWeeklyValues = []  //storing in the right order the weekly cases, used to update the graph
 		//finding max values
         if (d.features[i].properties.nb_cas_conf_last_21jrs > max21ValueZone) {
@@ -544,8 +543,8 @@ $.getJSON(who_url, function(d) {
         if (d.features[i].properties.totcas > maxCumulValueZone) {
             maxCumulValueZone = d.features[i].properties.totcas
         }
-		if (d.features[i].properties.situdate > lastUpdate){
-			lastUpdate = d.features[i].properties.situdate 
+		if (d.features[i].properties.situdate > lastUpdateZones){
+			lastUpdateZones = d.features[i].properties.situdate 
 		}
 		
         for (var step = 17; step < 53; step++) { // cleaning the cases fields for year 2018
@@ -592,6 +591,7 @@ $.getJSON(who_url, function(d) {
 		
 		
 		
+		
 		//creating field that stores all the cases per week 
 		d.features[i].properties.weekDataForGraph = featureWeeklyValues
 		
@@ -601,15 +601,20 @@ $.getJSON(who_url, function(d) {
 			HZlink(d.features[i])
 		}
 		else{
-			console.log(d.features[i].properties.nom+" doesn't geometry!")
+			alert(d.features[i].properties.nom+"zone doesn't have geometry!")
 		}
     }
 	//writting values in HTML
     $("#totalCases").html(totalCases)
     $("#cases21").html(cases21)
 	//lastUpdate
-	console.log(lastUpdate)
-	$("#lastUpdate").html(formatDate(new Date(lastUpdate)))
+	$("#lastUpdateZones").html(formatDate(new Date(lastUpdateZones)))
+	//storing values and creating default legend
+	max21Value = max21ValueZone
+	maxCumulValue = maxCumulValueZone
+    $("#maxValue").html(max21Value)
+    $("#middleValue").html(Math.round(max21Value / 4))
+    $("#minValue").html(Math.round(max21Value / 16))
 	
 	//chart creation
     var labels = [];
@@ -698,6 +703,12 @@ $.getJSON(who_url, function(d) {
             },
         }
     });
+	
+	propLayer.setSource(zonesSource)
+	colorLayer.setSource(zonesSource)
+	overlayHZLayer.setSource(zonesSource)
+	overlayHZLayer.setVisible(false)
+	selectLayer.setSource(zonesSelectSource)
 })
 
 
@@ -715,8 +726,12 @@ $.getJSON(who_url2, function(d) {
         if (d.features[i].properties.cumulcas > maxCumulValueArea) {
             maxCumulValueArea = d.features[i].properties.cumulcas
         }
+		if (d.features[i].properties.situat > lastUpdateAreas){
+			lastUpdateAreas = d.features[i].properties.situat 
+		}
 		// adding the level in a secured field (used later for the selection)
 		d.features[i].properties._level_ = "area"
+		d.features[i].properties.geom = d.features[i].geometry
 		//populating
 		areasSource.addFeature(GeoJsonFormat.readFeature(d.features[i], {
             dataProjection: 'EPSG:3857',
@@ -728,12 +743,9 @@ $.getJSON(who_url2, function(d) {
         }))
     }
 	
-	//storing values and creating default legend
-	max21Value = max21ValueArea
-	maxCumulValue = maxCumulValueArea
-    $("#maxValue").html(max21Value)
-    $("#middleValue").html(Math.round(max21Value / 4))
-    $("#minValue").html(Math.round(max21Value / 16))
+	
+
+	$("#lastUpdateAreas").html(formatDate(new Date(lastUpdateAreas)))
 	
 	//hiding loading logo once areas are loaded as it's the heaviest dataset
     $("#loadingLogo").hide()
@@ -826,12 +838,13 @@ selectSingleClick.on('select', function(e) {
 
 //input functions
 $('input[id="checkScale"]').change(function () {
+	console.log("test")
     var check = $(this).prop('checked');
     if (check){
-		scale = "zone"
+		scale = "area"
 	}
 	else{
-		scale = "area"
+		scale = "zone"
 	}
 	changeMap(scale,cases)
 });
@@ -892,11 +905,8 @@ function changeMap(scale,cases){
 }
 
 
-//default
-propLayer.setSource(areasSource)
-colorLayer.setSource(areasSource)
-overlayHZLayer.setSource(zonesSource)
-selectLayer.setSource(areasSelectSource)
+
+
 
 
 
