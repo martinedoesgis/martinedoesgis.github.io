@@ -263,7 +263,7 @@ else {
 	else{}
 	}
 	
-	var queryUrl = "http://api.wikimapia.org/?key="+key+"&function=box&coordsby=bbox&bbox="+left+"%2C"+bottom+"%2C"+right+"%2C"+top+"&category="+categoryId_number+"&count=10000&format=json";
+	var queryUrl = "https://api.wikimapia.org/?key="+key+"&function=box&coordsby=bbox&bbox="+left+"%2C"+bottom+"%2C"+right+"%2C"+top+"&category="+categoryId_number+"&count=10000&format=json";
 	
 	
 	$.getJSON( queryUrl, function( data ) {
@@ -271,8 +271,8 @@ else {
 		
 		
 		$("#alertsucess").show();
-		if (data.found) {number_returned.innerHTML = "<strong>Success!</strong> The query returned "+data.found+" feature.";}
-		else {number_returned.innerHTML = "<strong>Success!</strong> The query returned "+data.count+" features.";}
+		if (data.found > 0) {number_returned.innerHTML = "<strong>Success!</strong> The query returned "+data.found+" feature.";}
+		else {number_returned.innerHTML = "The query returned "+data.found+" features.";}
 		
 		if (data.foundh == "100") { $("#alert100").show(); } else{$("#alert100").hide();}
 		
