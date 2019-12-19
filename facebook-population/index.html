@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Facebook Population Density in QGIS</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="dist/bootstrap.min.css"/>
+		<script src="dist/bootstrap.min.js"></script>
+		<style>
+			img {
+				display:block;
+				margin:auto;
+				text-align:center;
+				max-width:70%;
+				border: solid 1px black
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+		<h3>Using Facebook Population Density Data in QGIS<h3>
+		<hr>
+		<h5>Download the data</h5>
+		<p>All the datasets can be download on <a href="https://data.humdata.org/dataset/highresolutionpopulationdensitymaps">HDX</a>. Search for the country you want and download the zip file.</p>
+		<h5>In QGIS</h5>
+		<p>Open the raster file in QGIS.</p>
+		<img src="imgs/1.png"><br><br>
+		<p>Open the tool <b>Create Grid</b>.</p>
+		<img src="imgs/2.png"><br><br>
+		<p>Set the parameters:</p>
+		<ul>
+			<li><b>Grid type</b>: Rectangle.</li>
+			<li><b>Grid extent</b>: Use Canvas Extent (to use the same extent as the current view) or Use Layer Extent (and select the population raster to use the full extent).</li>
+			<li><b>Horizontal and Vertical spacing</b>: Choose here the size of each rectangle. In the example, we set it to one kilometer to have a grid of one kilometer square.</li>
+		</ul>
+		<img src="imgs/3.png"><br><br>
+		<p>Result:</p>
+		<img src="imgs/4.png"><br><br>
+		<p>In the Toolbox, search for the tool called <b>Zonal Statistics</b>.</p>
+		<img src="imgs/5.png"><br><br>
+		<p>Set the parameters:</p>
+		<ul>
+			<li><b>Raster layer</b>: Select the population raster layer.</li>
+			<li><b>Vector layer containing zones</b>: Select the grid.</li>
+			<li><b>Output column prefix</b>: Type <em>pop_</em>.</li>
+			<li><b>Statistics to calculate</b>: Tick only  <em>Sum</em>.</li>
+		</ul>
+		<img src="imgs/6.png"><br><br>
+		<p>The tool will create a new column in the attribute table of the grid with the population by square (of one kilometer square in this example).</p>
+		<img src="imgs/7.png"><br><br>
+		<p>Use a Graduated symbology to style the layer.</p>
+		<img src="imgs/8.png"><br><br>
+		<p>If you want to estimate the population of a specific area, select the corresponding squares of the grid and use Show Statistical Summary.</p>
+		<img src="imgs/9.png"><br><br>
+		<p>You can also use a layer of administrative boundaries (regions, districts, neighborhoods etc.) instead of the grid to compute the population for each using the Zonal Statistics tool.</p>
+		<hr>
+		<div>
+	</body>
+</html>
