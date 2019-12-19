@@ -33,37 +33,6 @@
 			overflow-x: hidden;
 		}
 		
-		#loadingLogo {
-		  position:fixed;
-		  top:40%;
-		  right:150px;
-		  width: 50px;
-		  height: 50px;
-		  background-color: #0CB1C4;
-		  animation-name: spin;
-		  animation-duration: 5000ms;
-		  animation-iteration-count: infinite;
-		  animation-timing-function: linear; 
-		  /* transform: rotate(3deg); */
-		   /* transform: rotate(0.3rad);/ */
-		   /* transform: rotate(3grad); */ 
-		   /* transform: rotate(.03turn);  */
-		}
-		#loadingText {
-		  position:fixed;
-		  top:35%;
-		  right:125px;
-		}
-
-		@keyframes spin {
-			from {
-				transform:rotate(0deg);
-			}
-			to {
-				transform:rotate(360deg);
-			}
-		}
-		
 		
 		#map{
 			height: 420px;
@@ -71,7 +40,7 @@
 		}
 		#info{
 			position:absolute;
-			height:100%;
+			height:90%;
 			overflow-y: scroll;
 			overflox-x:hidden;
 			border-left:solid 1px grey;
@@ -107,6 +76,32 @@
 		</style>
 	</head>
 	<body>
+	
+	<div class="modal" id="myModal">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+
+		  <!-- Modal Header -->
+		  <div class="modal-header">
+			<h4 class="modal-title">Select country</h4>
+		  </div>
+
+		  <!-- Modal body -->
+		  <div class="modal-body">
+			<select class="form-control" id="selectCountry" name="selectCountry">
+				
+			  </select>
+		  </div>
+
+		  <!-- Modal footer -->
+		  <div class="modal-footer">
+			<button id="createDB" type="button" class="btn btn-info" data-dismiss="modal">Create dashboard</button>
+		  </div>
+
+		</div>
+	  </div>
+	</div>
+	
 	<div class="container-fluid">
 	<div class="row">
 	<div class="col-md-12">
@@ -117,13 +112,18 @@
 	</div>
 	</div>
 	<div class="row">
+		<div class="col-md-3">
+			Events descriptions
+			<br>
+			<div id="info"></div>
+		</div>
 		<div class="col-md-6">
 			<div class="row" id="map"></div>
 			</br>
 			
 			<div class="row">
 			<div class="col-md-8">
-				Time
+				Events per day
 				</br>
 				<div id="timeChart"></div>
 			</div>
@@ -139,26 +139,397 @@
 			<div id="actor1ChartDiv">Perpetrator</br><div id="actor1Chart"></div></div>
 			<div id="actor1ChartDiv">Target</br><div id="actor2Chart"></div></div>
 		</div>
-		<div class="col-md-3">
-			Events descriptions
-			<div id="info"></div>
-		</div>
 	</div>
 	<div class="row">
 	
 	</div>
-	</div>
-	<div id="loadingLogo"></div>
-	<div id="loadingText">Loading events</div>
+	</div>	
 	
 	
-	
-	<script>
-		//change here the country
-		var country = "Burkina Faso"
+	<script>	
+		var countries = [
+  {
+    "name": "Afghanistan",
+    "iso": 4
+  },
+  {
+    "name": "Albania",
+    "iso": 8
+  },
+  {
+    "name": "Algeria",
+    "iso": 12
+  },
+  {
+    "name": "Angola",
+    "iso": 24
+  },
+  {
+    "name": "Bahrain",
+    "iso": 48
+  },
+  {
+    "name": "Bangladesh",
+    "iso": 50
+  },
+  {
+    "name": "Belarus",
+    "iso": 112
+  },
+  {
+    "name": "Benin",
+    "iso": 204
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "iso": 70
+  },
+  {
+    "name": "Botswana",
+    "iso": 72
+  },
+  {
+    "name": "Bulgaria",
+    "iso": 100
+  },
+  {
+    "name": "Burkina Faso",
+    "iso": 854
+  },
+  {
+    "name": "Burundi",
+    "iso": 108
+  },
+  {
+    "name": "Cambodia",
+    "iso": 116
+  },
+  {
+    "name": "Cameroon",
+    "iso": 120
+  },
+  {
+    "name": "Central African Republic (CAR)",
+    "iso": 140
+  },
+  {
+    "name": "Chad",
+    "iso": 148
+  },
+  {
+    "name": "Cote d'Ivoire",
+    "iso": 384
+  },
+  {
+    "name": "Croatia",
+    "iso": 191
+  },
+  {
+    "name": "Cyprus",
+    "iso": 196
+  },
+  {
+    "name": "Democratic Republic of Congo (DRC)",
+    "iso": 180
+  },
+  {
+    "name": "Djibouti",
+    "iso": 262
+  },
+  {
+    "name": "Egypt",
+    "iso": 818
+  },
+  {
+    "name": "Equatorial Guinea",
+    "iso": 226
+  },
+  {
+    "name": "Eritrea",
+    "iso": 232
+  },
+  {
+    "name": "Eswatini",
+    "iso": 748
+  },
+  {
+    "name": "Ethiopia",
+    "iso": 231
+  },
+  {
+    "name": "Gabon",
+    "iso": 266
+  },
+  {
+    "name": "Gambia",
+    "iso": 270
+  },
+  {
+    "name": "Ghana",
+    "iso": 288
+  },
+  {
+    "name": "Greece",
+    "iso": 300
+  },
+  {
+    "name": "Guinea",
+    "iso": 324
+  },
+  {
+    "name": "Guinea-Bissau",
+    "iso": 624
+  },
+  {
+    "name": "India",
+    "iso": 356
+  },
+  {
+    "name": "Indonesia",
+    "iso": 360
+  },
+  {
+    "name": "Iran",
+    "iso": 364
+  },
+  {
+    "name": "Iraq",
+    "iso": 368
+  },
+  {
+    "name": "Israel",
+    "iso": 376
+  },
+  {
+    "name": "Jordan",
+    "iso": 400
+  },
+  {
+    "name": "Kenya",
+    "iso": 404
+  },
+  {
+    "name": "Kosovo",
+    "iso": 0
+  },
+  {
+    "name": "Kuwait",
+    "iso": 414
+  },
+  {
+    "name": "Laos",
+    "iso": 418
+  },
+  {
+    "name": "Lebanon",
+    "iso": 422
+  },
+  {
+    "name": "Lesotho",
+    "iso": 426
+  },
+  {
+    "name": "Liberia",
+    "iso": 430
+  },
+  {
+    "name": "Libya",
+    "iso": 434
+  },
+  {
+    "name": "Madagascar",
+    "iso": 450
+  },
+  {
+    "name": "Malawi",
+    "iso": 454
+  },
+  {
+    "name": "Malaysia",
+    "iso": 458
+  },
+  {
+    "name": "Mali",
+    "iso": 466
+  },
+  {
+    "name": "Mauritania",
+    "iso": 478
+  },
+  {
+    "name": "Moldova",
+    "iso": 498
+  },
+  {
+    "name": "Montenegro",
+    "iso": 499
+  },
+  {
+    "name": "Morocco",
+    "iso": 504
+  },
+  {
+    "name": "Mozambique",
+    "iso": 508
+  },
+  {
+    "name": "Myanmar",
+    "iso": 104
+  },
+  {
+    "name": "Namibia",
+    "iso": 516
+  },
+  {
+    "name": "Nepal",
+    "iso": 524
+  },
+  {
+    "name": "Niger",
+    "iso": 562
+  },
+  {
+    "name": "Nigeria",
+    "iso": 566
+  },
+  {
+    "name": "North Macedonia",
+    "iso": 807
+  },
+  {
+    "name": "Oman",
+    "iso": 512
+  },
+  {
+    "name": "Pakistan",
+    "iso": 586
+  },
+  {
+    "name": "Palestine",
+    "iso": 275
+  },
+  {
+    "name": "Philippines",
+    "iso": 608
+  },
+  {
+    "name": "Qatar",
+    "iso": 634
+  },
+  {
+    "name": "Republic of Congo",
+    "iso": 178
+  },
+  {
+    "name": "Romania",
+    "iso": 642
+  },
+  {
+    "name": "Russia",
+    "iso": 643
+  },
+  {
+    "name": "Rwanda",
+    "iso": 646
+  },
+  {
+    "name": "Saudi Arabia",
+    "iso": 682
+  },
+  {
+    "name": "Senegal",
+    "iso": 686
+  },
+  {
+    "name": "Serbia",
+    "iso": 688
+  },
+  {
+    "name": "Sierra Leone",
+    "iso": 694
+  },
+  {
+    "name": "Somalia",
+    "iso": 706
+  },
+  {
+    "name": "South Africa",
+    "iso": 710
+  },
+  {
+    "name": "South Sudan",
+    "iso": 728
+  },
+  {
+    "name": "Sri Lanka",
+    "iso": 144
+  },
+  {
+    "name": "Sudan",
+    "iso": 729
+  },
+  {
+    "name": "Syria",
+    "iso": 760
+  },
+  {
+    "name": "Tanzania",
+    "iso": 834
+  },
+  {
+    "name": "Thailand",
+    "iso": 764
+  },
+  {
+    "name": "Togo",
+    "iso": 768
+  },
+  {
+    "name": "Tunisia",
+    "iso": 788
+  },
+  {
+    "name": "Turkey",
+    "iso": 792
+  },
+  {
+    "name": "Uganda",
+    "iso": 800
+  },
+  {
+    "name": "Ukraine",
+    "iso": 804
+  },
+  {
+    "name": "United Arab Emirates",
+    "iso": 784
+  },
+  {
+    "name": "Vietnam",
+    "iso": 704
+  },
+  {
+    "name": "Yemen",
+    "iso": 887
+  },
+  {
+    "name": "Zambia",
+    "iso": 894
+  },
+  {
+    "name": "Zimbabwe",
+    "iso": 716
+  }
+]
+
+		$.each(countries, function (index, value) {
+			$('#selectCountry').append($('<option/>', { 
+				value: value.iso,
+				text : value.name 
+			}));
+		});
 		
 		
-		$("#titleCountry").html(country+" - 100 latest security events from ACLED database")
 	
 		var map = L.map('map',{
 			center: [0,  0],
@@ -174,22 +545,23 @@
 		}).addTo(map);
 		
 		
-		var acled_url = "https://api.acleddata.com/acled/read?terms=accept&country="+country+"&limit=100";
+		var markers = L.markerClusterGroup({maxClusterRadius:8}).addTo(map);
 		
 		
-		var markers = L.markerClusterGroup({maxClusterRadius:8});
-		
+	function createDashboard(acled_url){	
 		$.getJSON(acled_url,function(d){
 			console.log(d)
 			for (var i in d.data){
 				$("#info").append(infoBox(d.data[i]))
 				var marker = L.marker([Number(d.data[i].latitude), Number(d.data[i].longitude)]).bindPopup(infoPopup(d.data[i]));
 				markers.addLayer(marker);
+				
+				
 			}
-			markers.addTo(map)
+			
 			map.fitBounds(markers.getBounds());
 			
-			var selectorMarker = L.circleMarker([0,0],{radius:22}).setStyle({color:'yellow'}).addTo(map)
+			var selectorMarker = L.circleMarker([1000,1000],{radius:22}).setStyle({color:'yellow'}).addTo(map)
 			
 			$('.info').mouseenter(function(e){
 				var div = this
@@ -197,7 +569,7 @@
 				selectorMarker.setLatLng([div.getAttribute("data-latitude"),div.getAttribute("data-longitude")]); 
 			})
 			$('.info').mouseleave(function(e){
-				selectorMarker.setLatLng([0,0]); 
+				selectorMarker.setLatLng([1000,1000]); 
 			})
 			
 			var ndx = crossfilter(d.data);
@@ -205,6 +577,7 @@
 			
 			var typeDim  = ndx.dimension(function(d) {if (d.sub_event_type){return d.sub_event_type.replace(/ *\([^)]*\) */g, "")}else{return "UNKNOWN"}});
 			var typeGroup = typeDim.group().reduceCount();
+			console.log(typeGroup.all().length)
 			
 			var actor1Dim  = ndx.dimension(function(d) {if (d.actor1){return d.actor1.replace(/ *\([^)]*\) */g, "")}else{return "UNKNOWN"}});
 			var actor1Group = actor1Dim.group().reduceCount();
@@ -225,21 +598,21 @@
 			var fatalitiesGroup = fatalitiesDim.group().reduceCount();
 			
 			var typeChart  = dc.rowChart('#typeChart')
-			.height(200)
+			.height(Number(typeGroup.all().length)*25+50)
 			.dimension(typeDim)
 			.group(typeGroup)
 			.elasticX(true)
 			.ordinalColors(["#B1D5E7"])
 			
 			var actor1Chart  = dc.rowChart('#actor1Chart')
-			.height(800)
+			.height(Number(actor1Group.all().length)*25+50)
 			.dimension(actor1Dim)
 			.group(actor1Group)
 			.elasticX(true)
 			.ordinalColors(["#B1D5E7"])
 			
 			var actor2Chart  = dc.rowChart('#actor2Chart')
-			.height(800)
+			.height(Number(actor2Group.all().length)*25+50)
 			.dimension(actor2Dim)
 			.group(actor2Group)
 			.elasticX(true)
@@ -247,6 +620,7 @@
 			
 			var timeChart  = dc.lineChart('#timeChart')
 			.height(200)
+			.width($("#map").width()*0.7)
 			.dimension(timeDim)
 			.group(timeGroup)
 			.x(d3.scaleTime())
@@ -257,13 +631,13 @@
 			
 			
 			var fatalitiesChart = dc.pieChart('#fatalitiesChart')
-			.width(180)
-			.height(180)
+			.width($("#map").width()*0.25)
+			.height($("#map").width()*0.25)
 			.dimension(fatalitiesDim)
 			.group(fatalitiesGroup)
 			.minAngleForLabel(0)
 			.ordering(function(d){ return d.key })
-			.ordinalColors(["#9ecae1","#6baed6","#3182bd","#e6550d","#c6dbef"])
+			//.ordinalColors(["#9ecae1","#6baed6","#3182bd","#e6550d","#c6dbef"])
 			.innerRadius(30);
 			
 			dc.renderAll();
@@ -271,10 +645,12 @@
 			function filtering(){
 				$("#info").html("")
 				markers.clearLayers()
+				
 					_.each(timeDim.top(Infinity), function (d) {
 						$("#info").append(infoBox(d))
 						var marker = L.marker([Number(d.latitude), Number(d.longitude)]).bindPopup(infoPopup(d));
 						markers.addLayer(marker);
+						
 				  });
 				$('.info').mouseenter(function(e){
 					var div = this
@@ -290,10 +666,9 @@
 			  filtering()
 			  
 			});
-			$("#loadingLogo").hide()
-			$("#loadingText").hide()
 		
 		})
+		}
 	
 		function infoBox(d){
 			return 	"<div data-latitude="+d.latitude+" data-longitude="+d.longitude+" class='col-md-12 info'>"+
@@ -308,6 +683,20 @@
 					"<p>"+d.notes+"<em> Source: "+d.source+"</em></p>"+
 					"</div>"
 		}
+		
+		$('#myModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		})
+		$('#myModal').modal('show');
+		
+		$('#createDB').on('click',function(){
+			var iso = $('#selectCountry').val()
+			var name = $('#selectCountry option:selected').text()
+			var acled_url = "https://api.acleddata.com/acled/read?terms=accept&iso="+iso+"&limit=100";
+			createDashboard(acled_url)
+			$("#titleCountry").html(name+" - 100 latest security events from ACLED database")
+		})
 	</script>
 	</body>
 </html>
