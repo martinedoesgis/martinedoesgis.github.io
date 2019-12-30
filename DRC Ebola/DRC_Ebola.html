@@ -370,9 +370,7 @@ for (var step = 17; step < 53; step++) {
         cases: 0
     })
 }
-var todayWeek = new Date()
-todayWeek = todayWeek.getWeek()
-for (var step = 1; step <= todayWeek; step++) {
+for (var step = 1; step < 53; step++) {
     if (step < 10) {
         weekly_data.push({
             week: "w_2019_0" + step + "",
@@ -381,6 +379,22 @@ for (var step = 1; step <= todayWeek; step++) {
     } else {
         weekly_data.push({
             week: "w_2019_" + step + "",
+            cases: 0
+        })
+    }
+}
+var todayWeek = new Date()
+todayWeek = todayWeek.getWeek()
+console.log(todayWeek)
+for (var step = 1; step <= todayWeek; step++) {
+    if (step < 10) {
+        weekly_data.push({
+            week: "w_2020_0" + step + "",
+            cases: 0
+        })
+    } else {
+        weekly_data.push({
+            week: "w_2020_" + step + "",
             cases: 0
         })
     }
@@ -565,7 +579,7 @@ $.getJSON(who_url, function(d) {
         }
         var todayWeek = new Date()
         todayWeek = todayWeek.getWeek()
-        for (var step = 1; step <= todayWeek; step++) { // cleaning fields for year 2019
+        for (var step = 1; step <= 52; step++) { // cleaning fields for year 2019
             var old_week = "cas_s" + step + "_19"
             if (step < 10) {
                 var new_week = "w_2019_0" + step + ""
