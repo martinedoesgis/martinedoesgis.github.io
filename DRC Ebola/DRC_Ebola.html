@@ -577,8 +577,7 @@ $.getJSON(who_url, function(d) {
                 d.features[i].properties[new_week] = 0
             }
         }
-        var todayWeek = new Date()
-        todayWeek = todayWeek.getWeek()
+        
         for (var step = 1; step <= 52; step++) { // cleaning fields for year 2019
             var old_week = "cas_s" + step + "_19"
             if (step < 10) {
@@ -599,6 +598,30 @@ $.getJSON(who_url, function(d) {
                 d.features[i].properties[new_week] = 0
             }
         }
+		
+		var todayWeek = new Date()   //cleaning weeks for 2020
+        todayWeek = todayWeek.getWeek()
+		for (var step = 1; step <= todayWeek; step++) { // cleaning fields for year 2019
+            var old_week = "cas_s" + step + "_20"
+            if (step < 10) {
+                var new_week = "w_2020_0" + step + ""
+            } else {
+                var new_week = "w_2020_" + step + ""
+            }
+            if (d.features[i].properties[old_week]) {
+				featureWeeklyValues.push(d.features[i].properties[old_week])
+                d.features[i].properties[new_week] = d.features[i].properties[old_week]
+                for (var y in weekly_data) {
+                    if (weekly_data[y].week == new_week) {
+                        weekly_data[y].cases = weekly_data[y].cases + d.features[i].properties[old_week]
+                    }
+                }
+            } else {
+				featureWeeklyValues.push(0)
+                d.features[i].properties[new_week] = 0
+            }
+        }
+		
 		//calculating the total cases and last 21d cases (for overview)
         totalCases = totalCases + d.features[i].properties.totcas
         cases21 = cases21 + d.features[i].properties.nb_cas_conf_last_21jrs
