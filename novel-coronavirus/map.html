@@ -29,6 +29,10 @@
 		    width: 100%;
 		    overflow-x: hidden;
 		}
+		
+		#map{
+			min-height:300px
+		}
 
 		#loadingLogo {
 		    position: fixed;
@@ -110,6 +114,12 @@
 			padding-left:53px;
 			padding-right:19px
 		}
+		
+		.noUi-connect{
+			background-color:#ddd
+		}
+		
+		
 	</style>
 	</head>
 	<body>
@@ -127,7 +137,7 @@
 					| <em><a target="_blank"
 							href="https://docs.google.com/spreadsheets/d/18X1VM1671d99V_yd-cnUI1j8oSG2ZgfU_q1HfOizErA/edit#gid=0">Link
 							to
-							Database</a></em>
+							database and sources</a></em>
 				</small>
 				<hr>
 				<small><strong
@@ -159,6 +169,14 @@
 				<div id="sliderContainer">
 					<div id="slider"></div>
 				</div>
+				<hr>
+				<small>
+					<ul>
+						<li>Switch between cumulative and daily cases or deaths in the parameters.</li>
+						<li>Use the slider to scroll through the days.</li>
+						<li>Click on an area to display its data.</li>
+					</ul>
+				</small>
 
 			</div>
 			<div class="col-md-6">
