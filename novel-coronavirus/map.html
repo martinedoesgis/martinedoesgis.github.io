@@ -173,7 +173,7 @@
 				<small>
 					<ul>
 						<li>Switch between city or regions, cumulative or daily and cases or deaths in the parameters.</li>
-						<li>Data for cities starts on 26/01 and only for China (historical and world data coming soon).</li>
+						<li>Data for cities only for China (world data coming soon). Starts on 26/01 for Beijing, Shanghai and Tianjin.</li>
 						<li>Use the slider to scroll through the days.</li>
 						<li>Click on a region to display its data (coming soon for cities).</li>
 					</ul>
@@ -321,6 +321,11 @@ var url_chineseCities =
   "https://spreadsheets.google.com/feeds/list/" +
   spreadsheetID +
   "/3/public/values?alt=json";
+  
+  var url_chineseCitiesHistorical =
+  "https://spreadsheets.google.com/feeds/list/" +
+  spreadsheetID +
+  "/4/public/values?alt=json";
 
 var dates = []
 var maxDate, minDate
@@ -737,7 +742,32 @@ $.getJSON(url, function (data) {
     }
 	
 	// cities
-	var cities = city_cn.feed.entry
+	
+	$.getJSON(url_chineseCitiesHistorical, function (city_cn_hist) {
+	
+	var cities_cn = city_cn.feed.entry
+	
+	var city_hist = city_cn_hist.feed.entry
+	
+	var cities = []
+	
+	
+	for (var i in cities_cn){
+		for (var y in city_hist){
+			var ncp = cities_cn[i].gsx$provinceen.$t
+			var ocp = city_hist[y].gsx$provinceen.$t
+			var ncn = cities_cn[i].gsx$cityen.$t
+			var ocn = city_hist[y].gsx$cityen.$t
+			if ( ncp == ocp && ncn == ocn){
+				var item  = cities_cn[i]
+				var item2 = city_hist[y]
+				item = Object.assign(item2, item);
+				cities.push(item)
+			}
+		}
+	}
+	
+
 	
 	var maxValuesCasesCities = []
 
@@ -1352,6 +1382,7 @@ $.getJSON(url, function (data) {
 
     $("#loadingLogo").hide()
   });
+})
 })
 })
 
