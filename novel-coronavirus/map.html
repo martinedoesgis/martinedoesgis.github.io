@@ -173,7 +173,7 @@
 				<small>
 					<ul>
 						<li>Switch between city or regions, cumulative or daily and cases or deaths in the parameters.</li>
-						<li>Data for cities only for China (world data coming soon). Starts on 26/01 for Beijing, Shanghai and Tianjin.</li>
+						<li>Data for cities only for China (world data coming soon). Starts on 23/01 for Beijing, and on 26/01 for Shanghai and Tianjin districts. No details for Taiwan.</li>
 						<li>Use the slider to scroll through the days.</li>
 						<li>Click on a region to display its data (coming soon for cities).</li>
 					</ul>
@@ -767,6 +767,7 @@ $.getJSON(url, function (data) {
 		}
 	}
 	
+	console.log(cities)
 
 	
 	var maxValuesCasesCities = []
