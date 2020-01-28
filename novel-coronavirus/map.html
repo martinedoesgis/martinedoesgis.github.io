@@ -18,20 +18,18 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.0.3/nouislider.js"></script>
 		
 		<style>
-		body {
-		    padding: 0;
-		    margin: 0;
-		}
-
-		html,
-		body {
-		    height: 100%;
-		    width: 100%;
-		    overflow-x: hidden;
-		}
 		
+		#mapcol{
+			padding-right:0px ;
+		}
+		#rightcol{
+			margin-left:0px ;
+		}
 		#map{
-			min-height:300px
+			min-height:300px;
+			height: 100vh;
+			margin-left:0px;
+			margin-right:0px
 		}
 
 		#loadingLogo {
@@ -120,6 +118,7 @@
 		}
 		
 		
+		
 	</style>
 	</head>
 	<body>
@@ -180,12 +179,12 @@
 				</small>
 
 			</div>
-			<div class="col-md-6">
+			<div id="mapcol" class="col-md-6">
 				<div class="row" id="map"
-					style="width: 100%; height: 100%; position:fixed">
+					style="width: 100%">
 				</div>
 			</div>
-			<div class="col-md-2"
+			<div id="rightcol" class="col-md-2"
 				style="background-color:white;height:100%">
 				<h5>Parameters</h5>
 				<label class="switch-light"
@@ -361,10 +360,10 @@ var map = new ol.Map({
   view: new ol.View({
     center: ol.proj
       .fromLonLat(
-        [-75,
-          29.86
+        [101.99,
+          33.84
         ]),
-    zoom: 2,
+    zoom: 3,
   })
 });
 
