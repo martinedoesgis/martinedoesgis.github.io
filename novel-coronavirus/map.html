@@ -520,6 +520,21 @@ var citiesLayer = new ol.layer.Vector({
 });
 map.addLayer(citiesLayer)
 
+
+//blending
+var setBlendModeFromSelect = function(evt) {
+  evt.context.globalCompositeOperation = 'multiply';
+};
+var resetBlendModeFromSelect = function(evt) {
+  evt.context.globalCompositeOperation = 'source-over';
+};
+var bindLayerListeners = function(layer) {
+  layer.on('precompose', setBlendModeFromSelect);
+  layer.on('postcompose', resetBlendModeFromSelect);
+};
+bindLayerListeners(citiesLayer);
+bindLayerListeners(propLayer);
+
 var selectLayer = new ol
   .layer.Vector({
     title: "select",
@@ -1270,6 +1285,8 @@ $.getJSON(url, function (data) {
                   'visible',
                   "yes"
                 )
+				//
+			
             }
           }
         }
