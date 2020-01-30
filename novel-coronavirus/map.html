@@ -421,12 +421,12 @@ var polygonLayer = new ol.layer.Vector({
           fill: new ol
             .style
             .Fill({
-              color: 'rgba(255, 0, 0, 0.2)'
+              color: 'rgba(209, 33, 33, 0.1)'
             }),
           stroke: new ol
             .style
             .Stroke({
-              color: 'rgba(255, 255, 255, 0.9)',
+              color: 'rgba(209, 33, 33, 0.7)',
               width: 0.5
             })
         })
@@ -519,7 +519,6 @@ var citiesLayer = new ol.layer.Vector({
   
 });
 map.addLayer(citiesLayer)
-
 
 //blending
 var setBlendModeFromSelect = function(evt) {
@@ -1080,8 +1079,7 @@ $.getJSON(url, function (data) {
 				}
 			}
 		}
-	}
-	
+	}	
 }
 
 
