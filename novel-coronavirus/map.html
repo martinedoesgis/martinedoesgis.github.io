@@ -249,42 +249,42 @@
 				<small><strong
 						id="legendIndicator">Cumulative
 						cases</strong></small>
-				<svg height="120"
+				<svg height="300"
 					width="150">
-					<line x1="78" y1="29"
-						x2="98" y2="29"
+					<line x1="102" y1="52"
+						x2="106" y2="52"
 						style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
-					<line x1="65" y1="79"
-						x2="98" y2="79"
+					<line x1="80" y1="128"
+						x2="106" y2="128"
 						style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
-					<line x1="60" y1="103"
-						x2="98" y2="103"
+					<line x1="66" y1="166"
+						x2="106" y2="166"
 						style="stroke:rgba(0,0,0,0.2);stroke-width:1" />
-					<circle cx="50" cy="103"
-						r="7"
+					<circle cx="52" cy="166"
+						r="12"
 						stroke="rgba(209, 33, 33, 1)"
 						stroke-width="1"
 						fill="rgba(209, 33, 33, 0.8)" />
-					<circle cx="50" cy="79"
-						r="15"
+					<circle cx="52" cy="128"
+						r="25"
 						stroke="rgba(209, 33, 33, 1)"
 						stroke-width="1"
 						fill="rgba(209, 33, 33, 0.8)" />
-					<circle cx="50" cy="32"
-						r="30"
+					<circle cx="52" cy="52"
+						r="50"
 						stroke="rgba(209, 33, 33, 1)"
 						stroke-width="1"
 						fill="rgba(209, 33, 33, 0.8)" />
 					<text id="maxValue"
-						x="102" y="32"
+						x="110" y="55"
 						fill="black"
 						font-size="12"></text>
 					<text id="middleValue"
-						x="102" y="82"
+						x="110" y="131"
 						fill="black"
 						font-size="12"></text>
 					<text id="minValue"
-						x="102" y="106"
+						x="110" y="169"
 						fill="black"
 						font-size="12"></text>
 				</svg>
@@ -402,7 +402,7 @@ map.addLayer(basemap);
 
 //global functions
 function propRadius(v, m) {
-  return Math.sqrt(v / m) * 30
+  return Math.sqrt(v / m) * 50
 }
 
 var polygonLayer = new ol.layer.Vector({
