@@ -178,9 +178,9 @@
 				<small>
 					<ul>
 						<li>Switch between city or regions, cumulative or daily and cases or deaths in the parameters.</li>
-						<li>Data for cities: starts on 23/01 for Beijing, and on 26/01 for Shanghai and Tianjin districts. No details for Taiwan.</li>
 						<li>Use the slider to scroll through the days.</li>
-						<li>Click on a region to display its data (coming soon for cities).</li>
+						<li>Data for cities: starts on 23/01 for Beijing, and on 26/01 for Shanghai and Tianjin districts. No details for Taiwan.</li>
+						<li>Coordinates of chinese cities from batch geocoding, errors might occur.</li>
 					</ul>
 				</small>
 
@@ -391,6 +391,7 @@ var basemap = new ol.layer.Group({
         .source
         .XYZ({
           url: 'https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png',
+		  //url: ' http://tile.casa.ucl.ac.uk/duncan/WorldPopDen2015b/{z}/{x}/{y}.png',
           crossOrigin: 'anonymous'
         }),
       opacity: 1
@@ -398,6 +399,7 @@ var basemap = new ol.layer.Group({
   ]
 });
 map.addLayer(basemap);
+
 
 
 //global functions
@@ -469,8 +471,8 @@ var propLayer = new ol.layer.Vector({
             stroke: new ol
               .style
               .Stroke({
-                color: 'rgba(255, 255, 255, 0)',
-                width: 0.1
+                color: 'rgba(170, 15, 15, 0)',
+                width: 0
               })
           })
       })
@@ -510,8 +512,8 @@ var citiesLayer = new ol.layer.Vector({
             stroke: new ol
               .style
               .Stroke({
-                color: 'rgba(255, 255, 255, 0)',
-                width: 0.1
+                color: 'rgba(170, 15, 15, 0)',
+                width: 0
               })
           })
       })
@@ -1581,6 +1583,7 @@ function updateGraph() {
     .noUiSlider.get()
   ) // to trigger the update of the slider
 }
+
 
 
 
