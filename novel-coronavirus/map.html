@@ -125,6 +125,7 @@
 		
 		
 		
+		
 	</style>
 	</head>
 	<body>
@@ -374,7 +375,7 @@ var map = new ol.Map({
         [101.99,
           33.84
         ]),
-    zoom: 3,
+    zoom: 4,
   })
 });
 
@@ -423,13 +424,13 @@ var polygonLayer = new ol.layer.Vector({
           fill: new ol
             .style
             .Fill({
-              color: 'rgba(209, 33, 33, 0.1)'
+              color: 'rgba(223, 53, 53, 0.1)'
             }),
           stroke: new ol
             .style
             .Stroke({
-              color: 'rgba(209, 33, 33, 0.7)',
-              width: 0.5
+              color: 'rgba(209, 33, 33, 0.9)',
+              width: 1
             })
         })
     }
@@ -445,6 +446,7 @@ var propLayer = new ol.layer.Vector({
     .Vector(),
   style: function (feature) {
     var radius = 0
+	var outlineOpacity = 0
     if (feature.get(
         'value') >
       0) {
@@ -456,6 +458,7 @@ var propLayer = new ol.layer.Vector({
           ),
           maxValueCases
         )
+		outlineOpacity = 0.9
     }
     return new ol.style
       .Style({
@@ -466,13 +469,13 @@ var propLayer = new ol.layer.Vector({
             fill: new ol
               .style
               .Fill({
-                color: 'rgba(209, 33, 33, 0.8)'
+                color: 'rgba(209, 33, 33, 0.7)'
               }),
             stroke: new ol
               .style
               .Stroke({
-                color: 'rgba(170, 15, 15, 0)',
-                width: 0
+                color: 'rgba(209, 33, 33, '+outlineOpacity+')',
+                width: 1
               })
           })
       })
@@ -486,6 +489,7 @@ var citiesLayer = new ol.layer.Vector({
   source: new ol.source.Vector(),
   style: function (feature) {
     var radius = 0
+	var outlineOpacity = 0
     if (feature.get(
         'value') >
       0) {
@@ -497,6 +501,7 @@ var citiesLayer = new ol.layer.Vector({
           ),
           maxValueCasesCities
         )
+		outlineOpacity = 1
     }
     return new ol.style
       .Style({
@@ -507,13 +512,13 @@ var citiesLayer = new ol.layer.Vector({
             fill: new ol
               .style
               .Fill({
-                color: 'rgba(209, 33, 33, 0.8)'
+                color: 'rgba(209, 33, 33, 0.7)'
               }),
             stroke: new ol
               .style
               .Stroke({
-                color: 'rgba(170, 15, 15, 0)',
-                width: 0
+                color: 'rgba(209, 33, 33, '+outlineOpacity+')',
+                width: 1
               })
           })
       })
