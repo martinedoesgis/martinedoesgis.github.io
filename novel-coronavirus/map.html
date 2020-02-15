@@ -135,10 +135,10 @@
 			<div class="col-md-4">
 				<h5>
 					<div id="title">Novel
-						Coronavirus -
-						2019-2020</div>
+						Coronavirus |
+						Jan - Feb 2020</div>
 				</h5>
-				<small>
+				<small id="last_update">
 					<em> Last update : <b
 							id="lastUpdate"></b></em>
 					| <em><a target="_blank"
@@ -146,6 +146,8 @@
 							to
 							database and sources</a></em>
 				</small>
+				<br>
+				<b style="color:red">Not updated anymore</b> - <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal">More info</button>
 				<hr>
 				<small><strong
 						id="overviewLocation"></strong><strong
@@ -296,10 +298,36 @@
 	</div>
 	<div id="loadingLogo"></div>
 	
+		<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">
+		  </div>
+		  <div class="modal-body">
+			<p>This map is a personal project that I was updating every morning with the latest information using scripts to scrap the data from two main websites:</p>
+		    <ul>
+				<li><a href="https://3g.dxy.cn/newh5/view/pneumonia">DXY</a> for cases in China.</li>
+				<li><a href="https://www.google.com/maps/d/viewer?mid=1a04iBi41DznkMaQRnICO40ktROfnMfMx&ll=30.36074499740837%2C25.65894149751938&z=2">BNO Google Map</a> for outside of China.</li>
+			</ul>
+			<p>You can find <a href="https://github.com/martinedoesgis/martinedoesgis.github.io/tree/master/novel-coronavirus">here</a> the Node.js scripts used to scrap and convert the data and <a href="https://docs.google.com/spreadsheets/d/18X1VM1671d99V_yd-cnUI1j8oSG2ZgfU_q1HfOizErA/edit#gid=1037183071">here</a> the last version of the database.</p>
+			<p>Because of lack of internet connection for me and regular changes in the data model of those two websites that requires a lot of troubleshooting it is not possible for me to update the map everyday anymore.</p>
+			<p>You're welcome to use any part of the code or the data to continue your own mapping.</p>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+
+	  </div>
+	</div>
+	
+	
+	
+	
 <script>
-
-
-//Swal.fire('',"This map is a personal project that I'm updating every morning with the information of the day before. <b>I won't be able to update it after this weekend (15/02)</b> until at least end of March due to lack of internet connection. If you are interested in taking over, please contact me at <b>martinedoesgis [at] gmail [dot] com</b>. I'm using Node.js scripts to get the data from various websites so you need to be a bit familiar with it (or come up with an other solution) and it takes approx. 15-20 min everyday to update the data as there are always some manual steps and verifications.")
 
 
 // Replace All
@@ -1601,6 +1629,8 @@ function updateGraph() {
 propLayer.setVisible(false)
 polygonLayer.setVisible(false)
 selectLayer.setVisible(false)
+
+$("#last_update").hide()
 </script>
 </body>
 </html>
