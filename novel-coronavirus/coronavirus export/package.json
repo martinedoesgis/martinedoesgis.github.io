@@ -1,0 +1,22 @@
+{
+  "name": "tuto",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mapbox/togeojson": "^0.16.0",
+    "cheerio": "^1.0.0-rc.3",
+    "fs": "0.0.1-security",
+    "jquery": "^3.4.1",
+    "json2csv": "^4.5.4",
+    "node-cron": "^2.0.3",
+    "request": "^2.88.0",
+    "xmldom": "^0.2.1"
+  }
+}
