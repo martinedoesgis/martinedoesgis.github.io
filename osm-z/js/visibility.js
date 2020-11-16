@@ -44,4 +44,6 @@ function updateVisibilityCone(){
 	var hull = turf.convex(points);
 	visibleLight = turf.intersect(hull,visibleArea)
 	map.getSource('potential-cone').setData(visibleLight)
+	var visibleDisplay = turf.difference(circle,visibleLight)
+	map.getSource('visible-display').setData(visibleDisplay)
 }

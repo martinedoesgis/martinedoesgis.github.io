@@ -16,11 +16,3 @@ var map = new mapboxgl.Map({
 	antialias: true
 });
 
-//search
-// map.addControl(
-	// new MapboxGeocoder({
-	// accessToken: mapboxgl.accessToken,
-	// mapboxgl: mapboxgl
-	// })
-// );
-

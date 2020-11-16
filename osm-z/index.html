@@ -20,16 +20,22 @@
 	
 	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
 	
-	#startButton{
-		position:absolute;
-		bottom:38px;
-		width:98%;
-		margin-left:1%
+	#aboveMap { 
+		position: absolute; 
+		top: 0; 
+		bottom: 0; 
+		width: 100%; 
+		background:radial-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.8), #000);
+		pointer-events: none
 	}
+	
+
 </style>
 </head>
 <body>
 <div id="map"></div>
+<div id="aboveMap"></div>
+
 <!-- <button id="startButton" type="button" class="btn btn-danger btn-lg btn-block">Zoom further to choose your area</button> -->
 
 <script src="js/map.js"></script>

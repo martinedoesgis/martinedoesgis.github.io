@@ -22,7 +22,7 @@ map.on('load', function() {
 		'layout': {},
 		'paint': {
 			'fill-color': '#088',
-			'fill-opacity': 0.2
+			'fill-opacity': 0
 		}
 	});
 	
@@ -83,6 +83,25 @@ map.on('load', function() {
 		}
 	});
 	
+	//final vision display
+	map.addSource('visible-display', {
+		  'type': 'geojson',
+		  'data': {
+			  "type": "FeatureCollection",
+			  "features": []
+			}
+		});
+	map.addLayer({
+		'id': 'visible-display',
+		'type': 'fill',
+		'source': 'visible-display',
+		'layout': {},
+		'paint': {
+			'fill-color': '#000',
+			'fill-opacity': 0.7
+		}
+	});
+	
 	//3D buildings
 	// Insert the layer beneath any symbol layer.
 	var layers = map.getStyle().layers;
@@ -102,7 +121,7 @@ map.on('load', function() {
 		'type': 'fill-extrusion',
 		'minzoom': 15,
 		'paint': {
-			'fill-extrusion-color': '#000',
+			'fill-extrusion-color': '#555',
 			//'fill-extrusion-pattern': 'wall',
 			// use an 'interpolate' expression to add a smooth transition effect to the
 			// buildings as the user zooms in
