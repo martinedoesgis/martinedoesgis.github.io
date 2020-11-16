@@ -15,6 +15,7 @@ var map = new mapboxgl.Map({
 	container: 'map',
 	antialias: true
 });
+map.touchZoomRotate.enable({ around: 'center' });
 
 //search
 // map.addControl(
