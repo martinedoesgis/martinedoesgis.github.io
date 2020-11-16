@@ -1,5 +1,5 @@
-var maxMoveDistance = 150
-var maxViewDistance = 300
+var maxMoveDistance = 75
+var maxViewDistance = 150
 
 var potentialViewArea,redBuildings,visibleArea,visibleLight,visibilitySegments,circle
 
