@@ -37,11 +37,6 @@ map.on('zoom', function() {
 	map.setCenter(center)
 });
 
-map.on('move', function() {
-	var center = player.getLngLat()
-	map.setCenter(center)
-});
-
 function updateVisibilityCone(){
 	var center = player.getLngLat()
 	var startPoint = turf.point([center.lng,center.lat])

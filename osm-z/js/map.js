@@ -8,7 +8,7 @@ var map = new mapboxgl.Map({
 	zoom: 18,
 	pitch: 45,
 	maxPitch:45,
-	minZoom:17,
+	minZoom:18,
 	maxZoom:20,
 	dragPan: false,
 	bearing: -17.6,
