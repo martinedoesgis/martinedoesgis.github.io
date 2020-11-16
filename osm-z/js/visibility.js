@@ -28,6 +28,8 @@ function updateVisibility(){
 
 map.on('rotate', function() {
 	updateVisibilityCone()
+	var center = player.getLngLat()
+	map.setCenter(center)
 });
 
 function updateVisibilityCone(){
