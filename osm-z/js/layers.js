@@ -4,7 +4,7 @@ var player = new mapboxgl.Marker({
 
 map.on('load', function() {
 	//player
-	player.setLngLat([5.92033,45.56620])
+	player.setLngLat([-74.0018,40.7193])
 	player.addTo(map);
 	
 	// blue potential vision

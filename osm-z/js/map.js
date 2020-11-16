@@ -4,7 +4,7 @@ mapboxgl.accessToken = 'pk.eyJ1IjoibGVvLWlnYSIsImEiOiJjazY2bGV3MTYxMjV3M25sMmdtN
 //map
 var map = new mapboxgl.Map({
 	style: 'mapbox://styles/leo-iga/ckhko3ln90u2v1arr8ix4fwhm',
-	center: [5.92033,45.56620],
+	center: [-74.0018,40.7193],
 	zoom: 18,
 	pitch: 45,
 	maxPitch:45,
