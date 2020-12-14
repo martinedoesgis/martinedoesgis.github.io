@@ -136,9 +136,10 @@
 			function getImgsIDs(){
 				  var extent = map.getView().calculateExtent();
 				  var url = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/0/query?f=json&spatialRel=esriSpatialRelIntersects&geometry=%7B%22xmin%22%3A"+extent[0]+"%2C%22ymin%22%3A"+extent[1]+"%2C%22xmax%22%3A"+extent[2]+"%2C%22ymax%22%3A"+extent[3]+"%2C%22spatialReference%22%3A%7B%22wkid%22%3A102100%2CgeometryType=esriGeometryEnvelope&inSR=102100&outSR=3857"
-				  var url_count = url+"&outFields=OBJECTID&returnGeometry=false&returnCountOnly=true";
+				  var url_count = url+"&outFields=OBJECTID&returnGeometry=false";
 			      $.getJSON(url_count,function(d){
-					if (d.count>100){
+			
+					if (d.features.length>100){
 						alert("There are more than 100 imageries in this area, please zoom further")
 					}
 					else {
