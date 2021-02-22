@@ -1,0 +1,25 @@
+{
+"type": "FeatureCollection",
+"name": "labels",
+"features": [
+{ "type": "Feature", "properties": { "label": "Gate" }, "geometry": { "type": "Point", "coordinates": [ 32.115861888390867, 9.888926893183367 ] } },
+{ "type": "Feature", "properties": { "label": "Women and children neighborhood" }, "geometry": { "type": "Point", "coordinates": [ 32.114610195778631, 9.887512348001644 ] } },
+{ "type": "Feature", "properties": { "label": "House of the Moudir" }, "geometry": { "type": "Point", "coordinates": [ 32.11595961814438, 9.887790073321256 ] } },
+{ "type": "Feature", "properties": { "label": "Moudirich" }, "geometry": { "type": "Point", "coordinates": [ 32.11659580125135, 9.888794511268159 ] } },
+{ "type": "Feature", "properties": { "label": "Infirmary" }, "geometry": { "type": "Point", "coordinates": [ 32.117812724624358, 9.889682302252707 ] } },
+{ "type": "Feature", "properties": { "label": "Ravelin" }, "geometry": { "type": "Point", "coordinates": [ 32.114215517927931, 9.890537689837844 ] } },
+{ "type": "Feature", "properties": { "label": "Swamp area" }, "geometry": { "type": "Point", "coordinates": [ 32.112272199367787, 9.888112234398031 ] } },
+{ "type": "Feature", "properties": { "label": "Rifle range" }, "geometry": { "type": "Point", "coordinates": [ 32.106737312366235, 9.889954471271317 ] } },
+{ "type": "Feature", "properties": { "label": "Traders and foreigners neighborhood" }, "geometry": { "type": "Point", "coordinates": [ 32.11576227921902, 9.888369592732504 ] } },
+{ "type": "Feature", "properties": { "label": "Accomodation for soldiers" }, "geometry": { "type": "Point", "coordinates": [ 32.116747094427446, 9.890043342738778 ] } },
+{ "type": "Feature", "properties": { "label": "North bastion" }, "geometry": { "type": "Point", "coordinates": [ 32.116510287717027, 9.890350689711797 ] } },
+{ "type": "Feature", "properties": { "label": "Stables" }, "geometry": { "type": "Point", "coordinates": [ 32.116457664003597, 9.888943556637459 ] } },
+{ "type": "Feature", "properties": { "label": "Offices" }, "geometry": { "type": "Point", "coordinates": [ 32.116519684808708, 9.888545485003441 ] } },
+{ "type": "Feature", "properties": { "label": "Food storage" }, "geometry": { "type": "Point", "coordinates": [ 32.116854221272639, 9.888408474189973 ] } },
+{ "type": "Feature", "properties": { "label": "Warehouses" }, "geometry": { "type": "Point", "coordinates": [ 32.117012092412921, 9.888656574810271 ] } },
+{ "type": "Feature", "properties": { "label": "Powder magazine" }, "geometry": { "type": "Point", "coordinates": [ 32.117451876303711, 9.889400875547468 ] } },
+{ "type": "Feature", "properties": { "label": "Jail" }, "geometry": { "type": "Point", "coordinates": [ 32.115766038055696, 9.889543440421688 ] } },
+{ "type": "Feature", "properties": { "label": "Date palms" }, "geometry": { "type": "Point", "coordinates": [ 32.117854071827757, 9.888738040644748 ] } },
+{ "type": "Feature", "properties": { "label": "Village" }, "geometry": { "type": "Point", "coordinates": [ 32.110791217718464, 9.88521647637261 ] } }
+]
+}

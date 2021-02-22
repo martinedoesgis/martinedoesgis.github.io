@@ -1,0 +1,7 @@
+{
+"type": "FeatureCollection",
+"name": "pictures",
+"features": [
+{ "type": "Feature", "properties": { "name": "Moudirich" }, "geometry": { "type": "Point", "coordinates": [ 32.1167311193716, 9.888637134096786 ] } }
+]
+}
