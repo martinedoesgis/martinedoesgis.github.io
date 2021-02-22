@@ -3,8 +3,8 @@
 "name": "pictures",
 "features": [
 { "type": "Feature", "properties": { "name": "Moudirich of Fachoda, 10th of July 1898", "picturepath": "moudirich", "source": "https:\/\/gallica.bnf.fr\/ark:\/12148\/btv1b8432367q\/f26.item" }, "geometry": { "type": "Point", "coordinates": [ 32.116852453664904, 9.888531812533358 ] } },
-{ "type": "Feature", "properties": { "name": "Nile river and date palms (left), Moudirich (right), 10th of July 1898", "picturepath": "fachoda_before", "source": "https:\/\/gallica.bnf.fr\/ark:\/12148\/btv1b8432367q\/f24.item" }, "geometry": { "type": "Point", "coordinates": [ 32.118075476596289, 9.889655665426169 ] } },
-{ "type": "Feature", "properties": { "name": "Nile (left), french fort built on old ruins (right), south bastion (center), August 1898", "picturepath": "fachoda_after", "source": "https:\/\/gallica.bnf.fr\/ark:\/12148\/btv1b8432367q\/f25.item" }, "geometry": { "type": "Point", "coordinates": [ 32.118185959760247, 9.889541761591776 ] } },
+{ "type": "Feature", "properties": { "name": "Nile river and date palms (left), Moudirich (right), 10th of July 1898", "picturepath": "fachoda_before", "source": "https:\/\/gallica.bnf.fr\/ark:\/12148\/btv1b8432367q\/f24.item" }, "geometry": { "type": "Point", "coordinates": [ 32.118299012300128, 9.889754382050709 ] } },
+{ "type": "Feature", "properties": { "name": "Nile (left), french fort built on old ruins (right), south bastion (center), August 1898", "picturepath": "fachoda_after", "source": "https:\/\/gallica.bnf.fr\/ark:\/12148\/btv1b8432367q\/f25.item" }, "geometry": { "type": "Point", "coordinates": [ 32.118417203591818, 9.889637947054522 ] } },
 { "type": "Feature", "properties": { "name": "South bastion of the french fort", "picturepath": "french_bastion", "source": null }, "geometry": { "type": "Point", "coordinates": [ 32.116639195464678, 9.888509031691738 ] } }
 ]
 }
