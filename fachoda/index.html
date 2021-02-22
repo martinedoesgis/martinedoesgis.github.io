@@ -290,6 +290,28 @@
  
  
 <script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img = document.getElementById("myImg");
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+function openModal(e){
+  modal.style.display = "block";
+  modalImg.src = e.src;
+  captionText.innerHTML = e.alt;
+}
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() { 
+  modal.style.display = "none";
+}
+
+
 	mapboxgl.accessToken = 'pk.eyJ1IjoibGVvLWlnYSIsImEiOiJjazY2bGV3MTYxMjV3M25sMmdtNWluM2wzIn0.2THSqD6nz9OhE0Xsjnbw1g';
 var map = new mapboxgl.Map({
 container: 'map',
@@ -360,10 +382,34 @@ map.addControl(new mapboxgl.NavigationControl(),'top-right');
 map.addControl(new mapboxgl.ScaleControl({maxWidth:100}),'bottom-right');
  
 map.on('load', function () {
+
+
+map.addSource('picturesangles', {
+	  type: 'geojson',
+	  data: 'pic_angles.geojson'
+	});
+	map.addLayer({
+	'id': 'picturesangles',
+	'type': 'fill',
+	'source': 'picturesangles',
+	'paint':{
+'fill-color':'brown',
+'fill-opacity':0.2
+	
+	}
+	});
+
+
+
+
+
 map.addSource('buildings', {
   type: 'geojson',
   data: 'fachoda.geojson'
 });
+
+
+
 
 map.addLayer({
 'id': 'buildings',
@@ -461,8 +507,7 @@ map.setLayoutProperty('french_fort', 'visibility', 'none');
 map.on('click', 'pictures', function (e) {
 var coordinates = e.features[0].geometry.coordinates.slice();
 var name = e.features[0].properties.name;
-var picturepath = e.features[0].properties.picture;
-var desc = e.features[0].properties.desc;
+var picturepath = e.features[0].properties.picturepath;
 var source = e.features[0].properties.source;
  
 // Ensure that if the map is zoomed out such that multiple
@@ -474,29 +519,10 @@ coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
  
 new mapboxgl.Popup()
 .setLngLat(coordinates)
-.setHTML('<p>Moudirich of Fachoda, 10th of July 1898</p><img alt="Moudirich of Fachoda, 10th of July 1898" id="myImg" src="imgs/moudirich.png" width="100%"><em>Click on image to enlarge.</em> Source: <a href="https://gallica.bnf.fr/ark:/12148/btv1b8432367q/f26.item">BNF</a>')
+.setHTML('<p>'+name+'</p><img alt="'+name+'" id="myImg" onclick="openModal(this)" src="imgs/'+picturepath+'.png" width="100%"><em>Click on image to enlarge.</em> Source: <a href="'+source+'" target="_blank">BNF</a>')
 .addTo(map);
 
-// Get the modal
-var modal = document.getElementById("myModal");
 
-// Get the image and insert it inside the modal - use its "alt" text as a caption
-var img = document.getElementById("myImg");
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-img.onclick = function(){
-  modal.style.display = "block";
-  modalImg.src = this.src;
-  captionText.innerHTML = this.alt;
-}
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() { 
-  modal.style.display = "none";
-}
 
 
 
@@ -544,6 +570,10 @@ map.addSource('french_labels', {
 map.setLayoutProperty('french_labels', 'visibility', 'none');
 
 
+
+
+
+
 map.addSource('pictures', {
 	  type: 'geojson',
 	  data: 'pictures.geojson'
@@ -555,14 +585,18 @@ map.addSource('pictures', {
 	'paint':{
 	'text-halo-color':'#fff',
 	'text-color':'#000',
-	'text-halo-width':1
+	'text-halo-width':1,
+	
 	},
 	'layout': {
 		
 		'icon-image': 'picture',
-		
+		"icon-allow-overlap" : true,
+    "text-allow-overlap": true
 		}
 	});
+	
+
 
  
 // add a sky layer that will show when the map is highly pitched
@@ -628,8 +662,10 @@ function frenchfort(checkboxElem) {
 function pictures(checkboxElem) {
   if (checkboxElem.checked) {
     map.setLayoutProperty('pictures', 'visibility', 'visible');
+	map.setLayoutProperty('picturesangles', 'visibility', 'visible');
   } else {
    map.setLayoutProperty('pictures', 'visibility', 'none');
+   map.setLayoutProperty('picturesangles', 'visibility', 'none');
   }
 }
 
