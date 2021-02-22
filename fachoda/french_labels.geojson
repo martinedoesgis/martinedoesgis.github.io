@@ -3,6 +3,7 @@
 "name": "french_labels",
 "features": [
 { "type": "Feature", "properties": { "id": null, "label": "Camp" }, "geometry": { "type": "Point", "coordinates": [ 32.116535659864581, 9.889316632638172 ] } },
-{ "type": "Feature", "properties": { "id": null, "label": "Reduit" }, "geometry": { "type": "Point", "coordinates": [ 32.116660641183969, 9.888725080172431 ] } }
+{ "type": "Feature", "properties": { "id": null, "label": "Reduit" }, "geometry": { "type": "Point", "coordinates": [ 32.116660641183969, 9.888725080172431 ] } },
+{ "type": "Feature", "properties": { "id": null, "label": "South bastion" }, "geometry": { "type": "Point", "coordinates": [ 32.116654611720122, 9.888210349399998 ] } }
 ]
 }
