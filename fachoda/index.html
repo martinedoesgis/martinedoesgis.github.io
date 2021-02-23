@@ -6,6 +6,7 @@
 <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Martel">
 <style>
 	body {
         color: #404040;
@@ -23,7 +24,7 @@
 
       .sidebar {
         position: absolute;
-		font-family: Times New Roman;
+		font-family: Martel;
         width: 20%;
         height: 100%;
         top: 0;
@@ -47,7 +48,7 @@
 	  }
 	  
 	  
-	  @media screen and (max-width: 922px) {
+	  @media screen and (max-width: 1093px) {
 		 .sidebar {
 			width: 100%;
 			
@@ -155,6 +156,8 @@
 	  }
 	  
 
+
+
 	#myImg {
   border-radius: 5px;
   cursor: pointer;
@@ -176,6 +179,14 @@
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+.modal a{
+	color:white
+}
+
+.modal a:hover{
+	color:#DACBB6
 }
 
 /* Modal Content (image) */
@@ -246,445 +257,623 @@
 </head>
 <body>
 <div class="sidebar">
-      <div class="heading">
+    <div class="heading">
         <h1>Mapping Fachoda </h1>
-		<input id="sidebarswitcher" type="image" height="25px" src="menu.png" onclick="menu()" />
-      </div>
-	   <div class="sidebarcontent" id="layerscontent">
-         <h4>Layers</h4>
-		
-  <li><input checked type="checkbox" id="oldfortress" name="oldfortress" value="oldfortress"  onchange="oldottoman(this)">
-    <label for="oldfortress">Ottoman citadel</label>
-  </li>
-  <li><input type="checkbox" id="frenchfort" name="frenchfort" value="frenchfort" onchange="frenchfort(this)">
-    <label for="frenchfort">French fort</label>
-  </li>
-  <li><input checked type="checkbox" id="pictures" name="pictures" value="pictures" onchange="pictures(this)">
-    <label for="pictures">Pictures</label>
-  </li>
-		<h4>Background</h4>
-		<div>
- 
-  <input type="radio" id="plan" name="background" value="plan" onclick="changeBasemap(this);" >
-  <label for="plan">Plan</label><br>
-	
-  <input type="radio" id="img2004" name="background" value="google2004" checked onclick="changeBasemap(this);" >
-  <label for="img2004">2004 satellite imagery </label><br>
-  
-  <input type="radio" id="img2019" name="background" value="google2019" onclick="changeBasemap(this);" >
-  <label for="img2019">2019 satellite imagery</label><br>
- 
-  
-</div>
-
-	
-		
-</div>
-
+        <input id="sidebarswitcher"
+            type="image" height="25px"
+            src="menu.png"
+            onclick="menu()" />
     </div>
-<div id="map" class="map"></div>
- 
- <div id="myModal" class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" id="img01">
-  <div id="caption"></div>
+    <div class="sidebarcontent"
+        id="layerscontent">
+        <h4>Layers</h4>
+
+        <li><input checked
+                type="checkbox"
+                id="oldfortress"
+                name="oldfortress"
+                value="oldfortress"
+                onchange="oldottoman(this)">
+            <label
+                for="oldfortress">Ottoman citadel</label>
+        </li>
+        <li><input type="checkbox"
+                id="frenchfort"
+                name="frenchfort"
+                value="frenchfort"
+                onchange="frenchfort(this)">
+            <label
+                for="frenchfort">French fort</label>
+        </li>
+        <li><input checked
+                type="checkbox"
+                id="pictures"
+                name="pictures"
+                value="pictures"
+                onchange="pictures(this)">
+            <label
+                for="pictures">Pictures</label>
+        </li>
+        <h4>Background</h4>
+        <div>
+
+            <input type="radio"
+                id="plan"
+                name="background"
+                value="plan"
+                onclick="changeBasemap(this);">
+            <label
+                for="plan">Plan</label><br>
+
+            <input type="radio"
+                id="img2004"
+                name="background"
+                value="google2004"
+                checked
+                onclick="changeBasemap(this);">
+            <label for="img2004">2004 satellite imagery
+            </label><br>
+
+            <input type="radio"
+                id="img2019"
+                name="background"
+                value="google2019"
+                onclick="changeBasemap(this);">
+            <label for="img2019">2019 satellite imagery</label><br>
+        </div>
+    </div>
+</div>
+<div id="map" class="map">
+</div>
+
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content"
+        id="img01">
+    <div id="caption"></div>
 </div>
  
  
 <script>
-// Get the modal
-var modal = document.getElementById("myModal");
 
-// Get the image and insert it inside the modal - use its "alt" text as a caption
-var img = document.getElementById("myImg");
-var modalImg = document.getElementById("img01");
-var captionText = document.getElementById("caption");
-function openModal(e){
-  modal.style.display = "block";
-  modalImg.src = e.src;
-  captionText.innerHTML = e.alt;
-}
+var modal = document.getElementById(
+    "myModal");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var img = document.getElementById(
+    "myImg");
+var modalImg = document.getElementById(
+    "img01");
+var captionText = document
+    .getElementById("caption");
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() { 
-  modal.style.display = "none";
+function openModal(e) {
+    modal.style.display = "block";
+    modalImg.src = e.src;
+    captionText.innerHTML = e.alt;
 }
 
 
-	mapboxgl.accessToken = 'pk.eyJ1IjoibGVvLWlnYSIsImEiOiJjazY2bGV3MTYxMjV3M25sMmdtNWluM2wzIn0.2THSqD6nz9OhE0Xsjnbw1g';
+var span = document
+    .getElementsByClassName("close")[0];
+
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+
+mapboxgl.accessToken =
+    'pk.eyJ1IjoibGVvLWlnYSIsImEiOiJjazY2bGV3MTYxMjV3M25sMmdtNWluM2wzIn0.2THSqD6nz9OhE0Xsjnbw1g';
 var map = new mapboxgl.Map({
-container: 'map',
-zoom: 15.8,
-center: [32.115,9.888],
-pitch: 35,
-bearing: -45,
-style: {
-"glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
-"light": {
-  "anchor": "viewport",
-  "color": "white",
-  "intensity": 0.1
-},
-'version': 8,
-'sources': {
-'raster-tiles': {
-'type': 'raster',
-'tiles': [
-'google2004/{z}/{x}/{y}.png'
-],
-'tileSize': 256
-}
-},
-'layers': [
-{
-            id: 'background',
-            type: 'background',
-            paint: { 'background-color': '#DACBB6' }
-          },
-		  {
-'id': 'simple-tiles',
-'type': 'raster',
-'source': 'raster-tiles',
-'minzoom': 0,
-'maxzoom': 22
-}
-]
-},
+    container: 'map',
+    zoom: 15.8,
+    center: [32.115, 9.888],
+    pitch: 35,
+    bearing: -45,
+    style: {
+        "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+        "light": {
+            "anchor": "viewport",
+            "color": "white",
+            "intensity": 0.1
+        },
+        'version': 8,
+        'sources': {
+            'raster-tiles': {
+                'type': 'raster',
+                'tiles': [
+                    'google2004/{z}/{x}/{y}.png'
+                ],
+                'tileSize': 256
+            }
+        },
+        'layers': [{
+                id: 'background',
+                type: 'background',
+                paint: {
+                    'background-color': '#DACBB6'
+                }
+            },
+            {
+                'id': 'simple-tiles',
+                'type': 'raster',
+                'source': 'raster-tiles',
+                'minzoom': 0,
+                'maxzoom': 22
+            }
+        ]
+    },
 });
 
 function changeBasemap(radio) {
-   
-	// Set the tile url to a cache-busting url (to circumvent browser caching behaviour):
-map.getSource('raster-tiles').tiles = [''+radio.value+'/{z}/{x}/{y}.png'],
-map.setLayoutProperty('simple-tiles', 'visibility', 'none');
-map.style._sourceCaches['other:raster-tiles'].clearTiles()
-map.style._sourceCaches['other:raster-tiles'].update(map.transform)
-map.setLayoutProperty('simple-tiles', 'visibility', 'visible');
 
-// Force a repaint, so that the map will be repainted without you having to touch the map
-map.triggerRepaint()
+
+    map.getSource('raster-tiles')
+        .tiles = ['' + radio.value +
+            '/{z}/{x}/{y}.png'
+        ],
+        map.setLayoutProperty(
+            'simple-tiles',
+            'visibility', 'none');
+    map.style._sourceCaches[
+            'other:raster-tiles']
+        .clearTiles()
+    map.style._sourceCaches[
+            'other:raster-tiles']
+        .update(map.transform)
+    map.setLayoutProperty(
+        'simple-tiles',
+        'visibility', 'visible');
+
+
+    map.triggerRepaint()
 }
 
-map.loadImage('marker.png', function(error, image) {
-if (error) throw error;
-if (!map.hasImage('marker')) map.addImage('marker', image);
+map.loadImage('marker.png', function(
+    error, image) {
+    if(error) throw error;
+    if(!map.hasImage('marker'))
+        map.addImage('marker',
+            image);
 });
 
-map.loadImage('picture.png', function(error, image) {
-if (error) throw error;
-if (!map.hasImage('picture')) map.addImage('picture', image);
-});
-
-
-
-map.addControl(new mapboxgl.NavigationControl(),'top-right');
-map.addControl(new mapboxgl.ScaleControl({maxWidth:100}),'bottom-right');
- 
-map.on('load', function () {
-
-
-map.addSource('picturesangles', {
-	  type: 'geojson',
-	  data: 'pic_angles.geojson'
-	});
-	map.addLayer({
-	'id': 'picturesangles',
-	'type': 'fill',
-	'source': 'picturesangles',
-	'paint':{
-'fill-color':'brown',
-'fill-opacity':0.3
-	
-	}
-	});
-
-
-
-
-
-map.addSource('buildings', {
-  type: 'geojson',
-  data: 'fachoda.geojson'
+map.loadImage('picture.png', function(
+    error, image) {
+    if(error) throw error;
+    if(!map.hasImage(
+            'picture')) map
+        .addImage('picture',
+            image);
 });
 
 
 
+map.addControl(new mapboxgl
+    .NavigationControl(),
+    'top-right');
+map.addControl(new mapboxgl
+    .ScaleControl({
+        maxWidth: 100
+    }), 'bottom-right');
 
-map.addLayer({
-'id': 'buildings',
-'type': 'fill-extrusion',
-'source': 'buildings',
-'layout': {},
-'paint': {
-// See the Mapbox Style Specification for details on data expressions.
-// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions
- 
-// Get the fill-extrusion-color from the source 'color' property.
-'fill-extrusion-color': '#fff',
- 
-// Get fill-extrusion-height from the source 'height' property.
-'fill-extrusion-height': ['get', 'heigth'],
- 
-// Get fill-extrusion-base from the source 'base_height' property.
-'fill-extrusion-base': 0,
- 
-// Make extrusions slightly opaque for see through indoor walls.
-'fill-extrusion-opacity': 0.8,
-
-}
-});
+map.on('load', function() {
 
 
+    map.addSource(
+        'picturesangles', {
+            type: 'geojson',
+            data: 'pic_angles.geojson'
+        });
+    map.addLayer({
+        'id': 'picturesangles',
+        'type': 'fill',
+        'source': 'picturesangles',
+        'paint': {
+            'fill-color': 'brown',
+            'fill-opacity': 0.3
 
-map.addSource('french_fort', {
-  type: 'geojson',
-  data: 'french_fort.geojson'
-});
-map.addLayer({
-'id': 'french_fort',
-'type': 'fill-extrusion',
-'source': 'french_fort',
-'layout': {},
-'paint': {
-// See the Mapbox Style Specification for details on data expressions.
-// https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions
- 
-// Get the fill-extrusion-color from the source 'color' property.
-'fill-extrusion-color': 'blue',
- 
-// Get fill-extrusion-height from the source 'height' property.
-'fill-extrusion-height': 4,
- 
-// Get fill-extrusion-base from the source 'base_height' property.
-'fill-extrusion-base': 0,
- 
-// Make extrusions slightly opaque for see through indoor walls.
-'fill-extrusion-opacity': 0.5,
-
-}
-});
-
-
-
-map.setLayoutProperty('french_fort', 'visibility', 'none');
-
-	map.addSource('labels', {
-	  type: 'geojson',
-	  data: 'labels.geojson'
-	});
-	map.addLayer({
-	'id': 'labels',
-	'type': 'symbol',
-	'source': 'labels',
-	'paint':{
-	'text-halo-color':'#fff',
-	'text-color':'#000',
-	'text-halo-width':1
-	},
-	'layout': {
-		'text-field': ['get', 'label'],
-		'text-font': [
-			'literal',
-			['DIN Offc Pro Italic', 'Arial Unicode MS Regular']
-			],
-		'text-variable-anchor': ['bottom'],
-		'text-radial-offset': 1,
-		'text-justify': 'auto',
-		'icon-image': 'marker',
-		'icon-anchor': 'bottom'
-		}
-	});
-	
+        }
+    });
 
 
 
 
-
-
-// When a click event occurs on a feature in the places layer, open a popup at the
-// location of the feature, with description HTML from its properties.
-map.on('click', 'pictures', function (e) {
-var coordinates = e.features[0].geometry.coordinates.slice();
-var name = e.features[0].properties.name;
-var picturepath = e.features[0].properties.picturepath;
-var source = e.features[0].properties.source;
- 
-// Ensure that if the map is zoomed out such that multiple
-// copies of the feature are visible, the popup appears
-// over the copy being pointed to.
-while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-}
- 
-new mapboxgl.Popup()
-.setLngLat(coordinates)
-.setHTML('<p>'+name+'</p><img alt="'+name+'" id="myImg" onclick="openModal(this)" src="imgs/'+picturepath+'.png" width="100%"><em>Click on image to enlarge.</em> Source: <a href="'+source+'" target="_blank">BNF</a>')
-.addTo(map);
+    map.addSource('buildings', {
+        type: 'geojson',
+        data: 'fachoda.geojson'
+    });
 
 
 
 
+    map.addLayer({
+        'id': 'buildings',
+        'type': 'fill-extrusion',
+        'source': 'buildings',
+        'layout': {},
+        'paint': {
+
+
+
+            'fill-extrusion-color': '#fff',
+
+
+            'fill-extrusion-height': [
+                'get',
+                'heigth'
+            ],
+
+
+            'fill-extrusion-base': 0,
+
+
+            'fill-extrusion-opacity': 0.8,
+
+        }
+    });
+
+
+
+    map.addSource(
+        'french_fort', {
+            type: 'geojson',
+            data: 'french_fort.geojson'
+        });
+    map.addLayer({
+        'id': 'french_fort',
+        'type': 'fill-extrusion',
+        'source': 'french_fort',
+        'layout': {},
+        'paint': {
+
+
+
+            'fill-extrusion-color': 'blue',
+
+
+            'fill-extrusion-height': 4,
+
+
+            'fill-extrusion-base': 0,
+
+
+            'fill-extrusion-opacity': 0.5,
+
+        }
+    });
+
+
+
+    map.setLayoutProperty(
+        'french_fort',
+        'visibility', 'none'
+    );
+
+    map.addSource('labels', {
+        type: 'geojson',
+        data: 'labels.geojson'
+    });
+    map.addLayer({
+        'id': 'labels',
+        'type': 'symbol',
+        'source': 'labels',
+        'paint': {
+            'text-halo-color': '#fff',
+            'text-color': '#000',
+            'text-halo-width': 1
+        },
+        'layout': {
+            'text-field': [
+                'get',
+                'label'
+            ],
+            'text-font': [
+                'literal',
+                ['DIN Offc Pro Italic',
+                    'Arial Unicode MS Regular'
+                ]
+            ],
+            'text-variable-anchor': [
+                'bottom'
+            ],
+            'text-radial-offset': 1,
+            'text-justify': 'auto',
+            'icon-image': 'marker',
+            'icon-anchor': 'bottom'
+        }
+    });
 
 
 
 
-});
- 
-// Change the cursor to a pointer when the mouse is over the places layer.
-map.on('mouseenter', 'pictures', function () {
-map.getCanvas().style.cursor = 'pointer';
-});
- 
-// Change it back to a pointer when it leaves.
-map.on('mouseleave', 'pictures', function () {
-map.getCanvas().style.cursor = '';
-});
-
-map.addSource('french_labels', {
-	  type: 'geojson',
-	  data: 'french_labels.geojson'
-	});
-	map.addLayer({
-	'id': 'french_labels',
-	'type': 'symbol',
-	'source': 'french_labels',
-	'paint':{
-	'text-halo-color':'#fff',
-	'text-color':'#000',
-	'text-halo-width':1
-	},
-	'layout': {
-		'text-field': ['get', 'label'],
-		'text-font': [
-			'literal',
-			['DIN Offc Pro Italic', 'Arial Unicode MS Regular']
-			],
-		'text-variable-anchor': ['bottom'],
-		'text-radial-offset': 1,
-		'text-justify': 'auto',
-		'icon-image': 'marker',
-		'icon-anchor': 'bottom'
-		}
-	});
-map.setLayoutProperty('french_labels', 'visibility', 'none');
+    map.on('click', 'pictures',
+        function(e) {
+            var coordinates =
+                e.features[
+                    0]
+                .geometry
+                .coordinates
+                .slice();
+            var name = e
+                .features[0]
+                .properties
+                .name;
+            var picturepath =
+                e.features[
+                    0]
+                .properties
+                .picturepath;
+            var source = e
+                .features[0]
+                .properties
+                .source;
 
 
+            while(Math.abs(
+                    e.lngLat
+                    .lng -
+                    coordinates[
+                        0]
+                ) > 180) {
+                coordinates[
+                        0
+                    ] +=
+                    e.lngLat
+                    .lng >
+                    coordinates[
+                        0] ?
+                    360 : -
+                    360;
+            }
+
+            new mapboxgl
+                .Popup()
+                .setLngLat(
+                    coordinates
+                )
+                .setHTML(
+                    '<p>' +
+                    name +
+                    '</p><img alt="' +
+                    name +
+                    '" id="myImg" onclick="openModal(this)" src="imgs/' +
+                    picturepath +
+                    '.png" width="100%"><em>Click on image to enlarge.</em> Source: <a href="' +
+                    source +
+                    '" target="_blank">BNF</a>'
+                )
+                .addTo(map);
 
 
 
 
-map.addSource('pictures', {
-	  type: 'geojson',
-	  data: 'pictures.geojson'
-	});
-	map.addLayer({
-	'id': 'pictures',
-	'type': 'symbol',
-	'source': 'pictures',
-	'paint':{
-	'text-halo-color':'#fff',
-	'text-color':'#000',
-	'text-halo-width':1,
-	
-	},
-	'layout': {
-		
-		'icon-image': 'picture',
-		"icon-allow-overlap" : true,
-    "text-allow-overlap": true
-		}
-	});
-	
+        });
 
 
- 
-// add a sky layer that will show when the map is highly pitched
-map.addLayer({
-'id': 'sky',
-'type': 'sky',
-'paint': {
-'sky-type': 'atmosphere',
-'sky-atmosphere-sun': [0.0, 0.0],
-'sky-atmosphere-sun-intensity': 15
-}
-});
+    map.on('mouseenter',
+        'pictures',
+        function() {
+            map.getCanvas()
+                .style
+                .cursor =
+                'pointer';
+        });
 
-// Force a repaint, so that the map will be repainted without you having to touch the map
-map.flyTo({
-// These options control the ending camera position: centered at
-// the target, at zoom level 9, and north up.
-center: [32.115,9.888],
-zoom: 16,
-bearing: -45,
-pitch: 45,
-// These options control the flight curve, making it move
-// slowly and zoom out almost completely before starting
-// to pan.
-speed: 0.2, // make the flying slow
-curve: 1, // change the speed at which it zooms out
- 
-// This can be any easing function: it takes a number between
-// 0 and 1 and returns another number between 0 and 1.
-easing: function (t) {
-return t;
-},
- 
-// this animation is considered essential with respect to prefers-reduced-motion
-essential: true
-});
+
+    map.on('mouseleave',
+        'pictures',
+        function() {
+            map.getCanvas()
+                .style
+                .cursor =
+                '';
+        });
+
+    map.addSource(
+        'french_labels', {
+            type: 'geojson',
+            data: 'french_labels.geojson'
+        });
+    map.addLayer({
+        'id': 'french_labels',
+        'type': 'symbol',
+        'source': 'french_labels',
+        'paint': {
+            'text-halo-color': '#fff',
+            'text-color': '#000',
+            'text-halo-width': 1
+        },
+        'layout': {
+            'text-field': [
+                'get',
+                'label'
+            ],
+            'text-font': [
+                'literal',
+                ['DIN Offc Pro Italic',
+                    'Arial Unicode MS Regular'
+                ]
+            ],
+            'text-variable-anchor': [
+                'bottom'
+            ],
+            'text-radial-offset': 1,
+            'text-justify': 'auto',
+            'icon-image': 'marker',
+            'icon-anchor': 'bottom'
+        }
+    });
+    map.setLayoutProperty(
+        'french_labels',
+        'visibility', 'none'
+    );
+
+
+
+
+    map.addSource('pictures', {
+        type: 'geojson',
+        data: 'pictures.geojson'
+    });
+    map.addLayer({
+        'id': 'pictures',
+        'type': 'symbol',
+        'source': 'pictures',
+        'paint': {
+            'text-halo-color': '#fff',
+            'text-color': '#000',
+            'text-halo-width': 1,
+
+        },
+        'layout': {
+
+            'icon-image': 'picture',
+            "icon-allow-overlap": true,
+            "text-allow-overlap": true
+        }
+    });
+
+
+
+
+    // add a sky layer that will show when the map is highly pitched
+    map.addLayer({
+        'id': 'sky',
+        'type': 'sky',
+        'paint': {
+            'sky-type': 'atmosphere',
+            'sky-atmosphere-sun': [
+                0.0,
+                0.0
+            ],
+            'sky-atmosphere-sun-intensity': 15
+        }
+    });
+
+    // Force a repaint, so that the map will be repainted without you having to touch the map
+    map.flyTo({
+        // These options control the ending camera position: centered at
+        // the target, at zoom level 9, and north up.
+        center: [32.115,
+            9.888
+        ],
+        zoom: 16,
+        bearing: -45,
+        pitch: 45,
+        // These options control the flight curve, making it move
+        // slowly and zoom out almost completely before starting
+        // to pan.
+        speed: 0.2, // make the flying slow
+        curve: 1, // change the speed at which it zooms out
+
+        // This can be any easing function: it takes a number between
+        // 0 and 1 and returns another number between 0 and 1.
+        easing: function(
+            t) {
+            return t;
+        },
+
+        // this animation is considered essential with respect to prefers-reduced-motion
+        essential: true
+    });
 
 
 });
 
 //checkboxes
 function oldottoman(checkboxElem) {
-  if (checkboxElem.checked) {
-    map.setLayoutProperty('buildings', 'visibility', 'visible');
-	map.setLayoutProperty('labels', 'visibility', 'visible');
-  } else {
-   map.setLayoutProperty('buildings', 'visibility', 'none');
-   map.setLayoutProperty('labels', 'visibility', 'none');
-  }
+    if(checkboxElem.checked) {
+        map.setLayoutProperty(
+            'buildings',
+            'visibility', 'visible');
+        map.setLayoutProperty('labels',
+            'visibility', 'visible');
+    }
+    else {
+        map.setLayoutProperty(
+            'buildings',
+            'visibility', 'none');
+        map.setLayoutProperty('labels',
+            'visibility', 'none');
+    }
 }
 
 
 function frenchfort(checkboxElem) {
-  if (checkboxElem.checked) {
-    map.setLayoutProperty('french_fort', 'visibility', 'visible');
-	map.setLayoutProperty('french_labels', 'visibility', 'visible');
-  } else {
-   map.setLayoutProperty('french_fort', 'visibility', 'none');
-   map.setLayoutProperty('french_labels', 'visibility', 'none');
-  }
+    if(checkboxElem.checked) {
+        map.setLayoutProperty(
+            'french_fort',
+            'visibility', 'visible');
+        map.setLayoutProperty(
+            'french_labels',
+            'visibility', 'visible');
+    }
+    else {
+        map.setLayoutProperty(
+            'french_fort',
+            'visibility', 'none');
+        map.setLayoutProperty(
+            'french_labels',
+            'visibility', 'none');
+    }
 }
 
 function pictures(checkboxElem) {
-  if (checkboxElem.checked) {
-    map.setLayoutProperty('pictures', 'visibility', 'visible');
-	map.setLayoutProperty('picturesangles', 'visibility', 'visible');
-  } else {
-   map.setLayoutProperty('pictures', 'visibility', 'none');
-   map.setLayoutProperty('picturesangles', 'visibility', 'none');
-  }
+    if(checkboxElem.checked) {
+        map.setLayoutProperty(
+            'pictures',
+            'visibility', 'visible');
+        map.setLayoutProperty(
+            'picturesangles',
+            'visibility', 'visible');
+    }
+    else {
+        map.setLayoutProperty(
+            'pictures',
+            'visibility', 'none');
+        map.setLayoutProperty(
+            'picturesangles',
+            'visibility', 'none');
+    }
 }
 
 var menuStatus = 'closed'
 
-function menu(){
-	if (menuStatus == 'closed'){
-		document.getElementById('map').style.top = '250px'
-		document.getElementById('layerscontent').style.height = '190px'
-		menuStatus = 'open'
-	}
-	else if (menuStatus == 'open'){
-		document.getElementById('map').style.top = '60px'
-		document.getElementById('layerscontent').style.height = '0px'
-		menuStatus = 'closed'
-	}
+function menu() {
+    if(menuStatus == 'closed') {
+        document.getElementById('map')
+            .style.top = '250px'
+        document.getElementById(
+                'layerscontent').style
+            .height = '190px'
+        menuStatus = 'open'
+    }
+    else if(menuStatus == 'open') {
+        document.getElementById('map')
+            .style.top = '60px'
+        document.getElementById(
+                'layerscontent').style
+            .height = '0px'
+        menuStatus = 'closed'
+    }
 }
+
+function openModalIntro() {
+    modal.style.display = "block";
+    captionText.innerHTML = '<h3>Mapping Fachoda</h3><p><img src="imgs/map.png"></p><p>Located on the White Nile in South Sudan, the town of Fachoda - today known as Kodok - has been the theater of the climax of colonial rivalities between France and Great Britain at the end of the 19th century. First claimed by the french during the Congo-Nile expedition of 1898, which aim was to create a territorial continuity of colonies between the Congo and Djibouti, it was eventually retroceded to the british after tense negociations but without an open conflict. This constitued a important success for Great Britain, Fachoda beeing a key place on their Cairo - Cape Town axis.</p><p>At their arrival in July 1898, the french discover and document the ruins of the ottoman citadel built in 1865 and abandonned only 20 years later in 1884. They will use them as a base for their own fort, constructed between July and August 1898.</p><p> Using the plan drawn by the mission and satellite imagery, it is possible to trace back the location of these ancient constructions that have today completey disappeared.</p><img width="100%" src="imgs/compare.png"><h3><a id="closeModal" href="#">Discover the map</a></h3><br><br><br>';
+	
+	var close = document
+    .getElementById("closeModal");
+
+
+	close.onclick = function() {
+		modal.style.display = "none";
+	}
+	
+}
+
+openModalIntro()
+
 
 </script>
  
