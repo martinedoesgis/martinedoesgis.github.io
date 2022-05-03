@@ -12,6 +12,8 @@ map.on('click',function(e){
 				.addTo(map);
 			var btn = document.getElementsByClassName("playerMov")[0];
 			btn.addEventListener("click", () => {
+					
+					//moving player !
 					console.log("moving!");
 					popup.remove();
 					var playerCoord = player.getLngLat()
@@ -28,6 +30,8 @@ map.on('click',function(e){
 									map.setCenter([e.lngLat.lng, e.lngLat.lat])
 									console.log("animation finished, new turn")
 									updateEnvironment()
+									// generating zombies
+									generateZombies()
 								}
 								else{
 									var dist = index
@@ -37,11 +41,14 @@ map.on('click',function(e){
 									console.log("moving")
 									updateVisibility()
 									updateVisibilityCone()
+									moveZombies()
 								}
 							}, time);
 						})(i)
 					}
+				
 			});
+			
 		}
 	}
 })

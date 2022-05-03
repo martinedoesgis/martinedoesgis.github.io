@@ -12,34 +12,37 @@
 <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
 <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css" type="text/css"/>
-
 <script src="dist/visibility-polygon/visibility-polygon.js"></script>
+<link href="css/main.css" rel="stylesheet" />
 
-<style>
-	body { margin: 0; padding: 0; }
-	
-	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
-	
-	#aboveMap { 
-		position: absolute; 
-		top: 0; 
-		bottom: 0; 
-		width: 100%; 
-		background:radial-gradient(rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.8));
-		pointer-events: none
-	}
-	
-
-</style>
 </head>
 <body>
 <div id="map"></div>
-<div id="aboveMap"></div>
+
+<div id="frame">
+	<img src="img/frame.png" height="750 vh" width="100%">
+</div>
+
+<!-- <div id="foglayer_01" class="fog"> -->
+  <!-- <div class="image01"></div> -->
+  <!-- <div class="image02"></div> -->
+<!-- </div> -->
+<!-- <div id="foglayer_02" class="fog"> -->
+  <!-- <div class="image01"></div> -->
+  <!-- <div class="image02"></div> -->
+<!-- </div> -->
+<!-- <div id="foglayer_03" class="fog"> -->
+  <!-- <div class="image01"></div> -->
+  <!-- <div class="image02"></div> -->
+<!-- </div> -->
+
 
 <!-- <button id="startButton" type="button" class="btn btn-danger btn-lg btn-block">Zoom further to choose your area</button> -->
 
+<script src="js/generalFunctions.js"></script>
 <script src="js/map.js"></script>
 <script src="js/layers.js"></script>
+<script src="js/zombies.js"></script>
 <script src="js/environment.js"></script>
 <script src="js/visibility.js"></script>
 <script src="js/movement.js"></script>

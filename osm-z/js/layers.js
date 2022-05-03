@@ -1,11 +1,34 @@
+const markerPlayer = document.createElement('div');
+markerPlayer.className = 'markerPlayer';
+
 var player = new mapboxgl.Marker({
-		draggable: true
-	})
+	element: markerPlayer,
+})
 
 map.on('load', function() {
 	//player
-	player.setLngLat([-74.0018,40.7193])
+	player.setLngLat([12.58461,55.69890])
 	player.addTo(map);
+	
+	// zombies
+	map.addSource('zombies', {
+		'type': 'geojson',
+		'data': {
+			"type": "FeatureCollection",
+			"features": []
+		}
+	});
+	map.addLayer({
+		'id': 'zombies',
+		'type': 'circle',
+		'source': 'zombies',
+		'layout': {},
+		'paint': {
+			'circle-color': ['get','color'],
+			'circle-opacity': ['get','opacity'],
+			'circle-radius': 10
+		}
+	});
 	
 	// blue potential vision
 	map.addSource('potential-vision', {
@@ -60,7 +83,7 @@ map.on('load', function() {
 		'layout': {},
 		'paint': {
 			'fill-color': '#FFFF00',
-			'fill-opacity': 0.1
+			'fill-opacity': 0
 		}
 	});
 	
@@ -83,8 +106,8 @@ map.on('load', function() {
 		}
 	});
 	
-	//final vision display
-	map.addSource('visible-display', {
+	//black non-visible area
+	map.addSource('nonvisible-area', {
 		  'type': 'geojson',
 		  'data': {
 			  "type": "FeatureCollection",
@@ -92,13 +115,13 @@ map.on('load', function() {
 			}
 		});
 	map.addLayer({
-		'id': 'visible-display',
+		'id': 'nonvisible-area',
 		'type': 'fill',
-		'source': 'visible-display',
+		'source': 'nonvisible-area',
 		'layout': {},
 		'paint': {
 			'fill-color': '#000',
-			'fill-opacity': 0.7
+			'fill-opacity': 0.5
 		}
 	});
 	
@@ -121,7 +144,7 @@ map.on('load', function() {
 		'type': 'fill-extrusion',
 		'minzoom': 15,
 		'paint': {
-			'fill-extrusion-color': '#555',
+			'fill-extrusion-color': '#aaa',
 			//'fill-extrusion-pattern': 'wall',
 			// use an 'interpolate' expression to add a smooth transition effect to the
 			// buildings as the user zooms in
@@ -143,15 +166,16 @@ map.on('load', function() {
 			15.05,
 			['get', 'min_height']
 			],
-			'fill-extrusion-opacity': 0.7,	
+			'fill-extrusion-opacity': 1,	
 		}
 	}
 	,labelLayerId);	
 	
 	
 	//layer ordering
-	map.moveLayer('potential-vision', '3d-buildings');
-	map.moveLayer('visible-area', '3d-buildings');
+	//map.moveLayer('potential-vision', '3d-buildings');
+	//map.moveLayer('visible-area', '3d-buildings');
+
 	
 	
 	updateEnvironment()

@@ -1,15 +1,15 @@
-var maxMoveDistance = 75
+var maxMoveDistance = 25
 var maxViewDistance = 100
 
-var potentialViewArea,redBuildings,visibleArea,visibleLight,visibilitySegments,circle
+var potentialViewArea,redBuildings,visibleArea,visibleLight,visibilitySegments
 
 function updateEnvironment(){
 	var center = player.getLngLat()
 	var radius = maxViewDistance/1000*2;
 	var options = {steps: 20, units: 'kilometers'};
-	circle = turf.circle([center.lng,center.lat], radius, options);
+	var circle = turf.circle([center.lng,center.lat], radius, options);
     var features = map.queryRenderedFeatures( 
-	  { layers: ['building-extrusion'] }
+	  { layers: ['building'] }
 	);
 	var difference = circle
 	redBuildings = {

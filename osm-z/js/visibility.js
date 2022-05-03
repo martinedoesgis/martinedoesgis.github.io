@@ -28,11 +28,7 @@ function updateVisibility(){
 
 map.on('rotate', function() {
 	updateVisibilityCone()
-	var center = player.getLngLat()
-	map.setCenter(center)
-});
-
-map.on('zoom', function() {
+	
 	var center = player.getLngLat()
 	map.setCenter(center)
 });
@@ -49,6 +45,11 @@ function updateVisibilityCone(){
 	var hull = turf.convex(points);
 	visibleLight = turf.intersect(hull,visibleArea)
 	map.getSource('potential-cone').setData(visibleLight)
-	var visibleDisplay = turf.difference(circle,visibleLight)
-	map.getSource('visible-display').setData(visibleDisplay)
+	playerSeeZombies()
+	//difference with potential-vision
+	var radius = maxViewDistance/1000*10;
+	var options = {steps: 20, units: 'kilometers'};
+	var circle = turf.circle([center.lng,center.lat], radius, options);
+	var nonvisible = turf.difference(circle,visibleLight)
+	map.getSource('nonvisible-area').setData(nonvisible)
 }
